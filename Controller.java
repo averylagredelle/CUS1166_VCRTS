@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.time.Duration;
 
 public class Controller {
   private ArrayList<Vehicle> vehiclesArrayList;
@@ -18,7 +17,7 @@ public class Controller {
 
   }
   public void createCheckpoint(String checkpointImage) {
-    checkpoint = new Checkpoint(checkpointImage);
+    // checkpoint = new Checkpoint(checkpointImage);
 }
 
   public void triggerCheckpoint(Vehicle v) {
@@ -32,8 +31,8 @@ public class Controller {
 
   public void recruitNewVehicle(Vehicle oldV, Vehicle newV, Job j) {
     if (j != null) {
-      newV.loadCheckpoint(checkpoint);
-      Vehicle.add(newV);
+      // newV.loadCheckpoint(checkpoint);
+      // Vehicle.add(newV);
       newV.getComputationState();
   } else {
       System.out.println("No checkpoint available for recruitment.");
