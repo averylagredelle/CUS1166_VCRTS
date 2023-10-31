@@ -12,6 +12,7 @@ public class Controller {
   private HashMap<Job, Integer> completionTimes;
 
   public Controller() {
+    jobs = new ArrayList<Job>();
     minutesFromStart = 0;
     completionTimes = new HashMap<Job, Integer>();
   }

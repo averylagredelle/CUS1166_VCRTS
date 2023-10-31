@@ -10,6 +10,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -45,6 +46,7 @@ public class VCRTSGUI {
    private CarRentalRequestListener rentalRequestListener = new CarRentalRequestListener();
    private User currentUser;
    private Server database = new Server();
+   private Controller controller = new Controller();
    
    public VCRTSGUI() {
       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -265,7 +267,7 @@ public class VCRTSGUI {
       JLabel divider2 = new JLabel("/");
       JButton submit = new JButton("Submit Job");
       JButton back = new JButton("Back");
-      JButton jobTime = new JButton("Caculating Job Time");
+      JButton jobTime = new JButton("Caculate Job Time");
 
       clientIDPanel.setLayout(new BorderLayout());
       clientIDPanel.add(currentClientId, BorderLayout.WEST);
@@ -313,11 +315,15 @@ public class VCRTSGUI {
       dateSubPanel.add(divider2);
       dateSubPanel.add(year);
 
+      submit.setName("Submit");
       submit.addActionListener(jobRequestListener);
 
       back.setName(MAIN_PAGE_NAME);
       back.addActionListener(switcher);
       pageSwitchButtons.add(back);
+
+      jobTime.setName("Calculate Job Time");
+      jobTime.addActionListener(jobRequestListener);
 
       jobDeadlineSubPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 0));
       jobDeadlineSubPanel.setSize(40, 40);
@@ -330,9 +336,9 @@ public class VCRTSGUI {
       jobRequestPanel.add(jobDescriptionSubPanel);
       jobRequestPanel.add(approximateJobDurationSubPanel);
       jobRequestPanel.add(jobDeadlineSubPanel);
-      jobRequestPanel.add(jobTime);
       jobRequestPanel.add(submit);
       jobRequestPanel.add(back);
+      jobRequestPanel.add(jobTime);
 
       mainPanel.setLayout(new BorderLayout());
       mainPanel.add(clientIDPanel, BorderLayout.NORTH);
@@ -534,10 +540,10 @@ public class VCRTSGUI {
    }
 
    class JobRequestListener extends Job implements KeyListener, ActionListener, ItemListener, FieldClearer {
-      private String timeChoice = "hours";
-      private String month;
-      private String day;
-      private String year;
+      private boolean timeChoiceHours = true;
+      private String month = "";
+      private String day = "";
+      private String year = "";
 
       private JTextField titleBox;
       private JTextArea descriptionBox;
@@ -558,13 +564,15 @@ public class VCRTSGUI {
       @Override
       public void actionPerformed(ActionEvent e) {
          
-         if(timeChoice.equals("hours"))
+         if(timeChoiceHours)
             this.setDurationTime(this.getDurationTime() * 60);
 
          if(!this.getTitle().equals("") && !this.getDescription().equals("") && this.getDurationTime() > 0 && 
          !month.equals("") && !day.equals("") && !year.equals("")) {
             
-            this.setDeadline(month + "/" + day + "/" + year);
+            String deadline = year + "-" + month + "-" + day;
+            this.setDeadline(LocalDate.parse(deadline));
+            this.setDeadline("");
 
             Client thisClient;
             if(database.isClient(currentUser.getUsername())) {
@@ -575,17 +583,25 @@ public class VCRTSGUI {
             }
 
             Job newJob = new Job(this.getTitle(), this.getDescription(), this.getDurationTime(), this.getDeadline());
-            thisClient.submitJob(newJob);
 
-            if(!database.isClient(thisClient.getUsername())) {
-               database.addClient(thisClient);
+            if(((JButton)e.getSource()).getName().equals("Calculate Job Time")) {
+               infoBoxMessage.setText("Completion Time: " + controller.calculateJobCompletionTime(newJob) + " minutes from app start");
+               infoBox.setVisible(true);
             }
+            else {
+               thisClient.submitJob(newJob);
+               controller.assignJob(newJob);
 
-            database.updateDatabase("New Job Submitted", thisClient);
-            clearFields();
-            System.out.println("Job submitted successfully");
-            infoBoxMessage.setText("Job submitted successfully!");
-            infoBox.setVisible(true);
+               if(!database.isClient(thisClient.getUsername())) {
+                  database.addClient(thisClient);
+               }
+
+               database.updateDatabase("New Job Submitted", thisClient);
+               clearFields();
+               System.out.println("Job submitted successfully");
+               infoBoxMessage.setText("Job submitted successfully!");
+               infoBox.setVisible(true);
+            }
          }
          else {
             System.out.println("An error occurred. Please ensure you filled out all of the text boxes correctly.");
@@ -659,7 +675,7 @@ public class VCRTSGUI {
 
       @Override
       public void itemStateChanged(ItemEvent e) {
-         timeChoice = (String)((JComboBox)e.getSource()).getSelectedItem();
+         timeChoiceHours = ((String)((JComboBox)e.getSource()).getSelectedItem()).equals("hours");
       }
 
       @Override
