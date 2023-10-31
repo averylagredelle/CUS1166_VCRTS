@@ -1,23 +1,30 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Controller {
-  private ArrayList<Vehicle> vehiclesArrayList;
+  private ArrayList<Vehicle> vehicles;
   private ArrayList<Job> jobs;
   private Server server;
   private int redundancyLevel;
   private boolean checkpoint;
- 
   
+  private int minutesFromStart;
+  private HashMap<Job, Integer> completionTimes;
 
+  public Controller() {
+    minutesFromStart = 0;
+    completionTimes = new HashMap<Job, Integer>();
+  }
 
   public void assignJob(Job j) {
     jobs.add(j);
-    
-
+    completionTimes.put(j, minutesFromStart + j.getDurationTime());
+    minutesFromStart = minutesFromStart + j.getDurationTime();
   }
+
   public void createCheckpoint(String checkpointImage) {
     // checkpoint = new Checkpoint(checkpointImage);
-}
+  }
 
   // Trigger a checkpoint for a vehicle
   public void triggerCheckpoint(Vehicle v) {
@@ -35,18 +42,9 @@ public class Controller {
   }
 
 
-  public void calculateJobCompletionTime( Job j){
-      int currentTime = 0;
-        for (Job job : jobs) {
-            job.setDurationTime(currentTime);
-            currentTime += job.getDurationTime();
-            //job.setDeadline(currentTime);
-        }
-        for (Job job : jobs) {
-          System.out.println("Job ID: " + job.getDescription() + " - Completion Time: " + job.getDeadline());
-      }
-    }
-
-    
+  public int calculateJobCompletionTime(Job j){
+    return minutesFromStart + j.getDurationTime();
   }
+
+}
 
