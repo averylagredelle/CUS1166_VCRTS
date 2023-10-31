@@ -541,6 +541,7 @@ public class VCRTSGUI {
 
    class JobRequestListener extends Job implements KeyListener, ActionListener, ItemListener, FieldClearer {
       private boolean timeChoiceHours = true;
+      private boolean jobTimeCompletionChecked = false;
       private String month = "";
       private String day = "";
       private String year = "";
@@ -564,7 +565,7 @@ public class VCRTSGUI {
       @Override
       public void actionPerformed(ActionEvent e) {
          
-         if(timeChoiceHours)
+         if(timeChoiceHours && !jobTimeCompletionChecked)
             this.setDurationTime(this.getDurationTime() * 60);
 
          if(!this.getTitle().equals("") && !this.getDescription().equals("") && this.getDurationTime() > 0 && 
@@ -585,6 +586,7 @@ public class VCRTSGUI {
             Job newJob = new Job(this.getTitle(), this.getDescription(), this.getDurationTime(), this.getDeadline());
 
             if(((JButton)e.getSource()).getName().equals("Calculate Job Time")) {
+               jobTimeCompletionChecked = true;
                infoBoxMessage.setText("Completion Time: " + controller.calculateJobCompletionTime(newJob) + " minutes from app start");
                infoBox.setVisible(true);
             }
@@ -598,6 +600,7 @@ public class VCRTSGUI {
 
                database.updateDatabase("New Job Submitted", thisClient);
                clearFields();
+               jobTimeCompletionChecked = false;
                System.out.println("Job submitted successfully");
                infoBoxMessage.setText("Job submitted successfully!");
                infoBox.setVisible(true);

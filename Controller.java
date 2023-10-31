@@ -20,7 +20,7 @@ public class Controller {
   public void assignJob(Job j) {
     jobs.add(j);
     completionTimes.put(j, minutesFromStart + j.getDurationTime());
-    minutesFromStart = minutesFromStart + j.getDurationTime();
+    minutesFromStart += j.getDurationTime();
   }
 
   public void createCheckpoint(String checkpointImage) {
