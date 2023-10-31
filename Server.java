@@ -80,7 +80,7 @@ public class Server {
 
     // Add an owner to the list
     public void addOwner(Owner o) {
-        owners add(o);
+        owners.add(o);
     }
 
     // Check if a user exists

@@ -573,7 +573,7 @@ public class VCRTSGUI {
             }
 
             Job newJob = new Job(this.getTitle(), this.getDescription(), this.getDurationTime(), this.getDeadline());
-            thisClient.addJobToQueue(newJob);
+            thisClient.submitJob(newJob);
 
             if(!database.isClient(thisClient.getUsername())) {
                database.addClient(thisClient);
@@ -711,7 +711,7 @@ public class VCRTSGUI {
             }
 
             Vehicle newRental = new Vehicle(this.getMake(), this.getModel(), this.getLicensePlateNumber(), this.getResidency());
-            thisOwner.addRental(newRental);
+            thisOwner.rentVehicle(newRental);
 
             if(!database.isOwner(thisOwner.getUsername())) {
                database.addOwner(thisOwner);

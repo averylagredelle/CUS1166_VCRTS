@@ -51,8 +51,8 @@ public class Job {
         return deadline;
     }
 
-    public void setDeadline(String string) {
-        this.deadline = string;
+    public void setDeadline(LocalDate deadline) {
+        this.deadline = deadline;
     }
 
     public boolean isInProgress() {
