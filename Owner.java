@@ -13,12 +13,12 @@ public class Owner extends User {
         rentals = new ArrayList<Vehicle>();
     }
 
-    public void rentVehicle(Vehicle v) {
-        rentals.add(v);
+    public void rentVehicle(Vehicle aCar) {
+        rentals.add(aCar);
     }
 
-    public void removeVehicle(Vehicle v) {
-        rentals.remove(v);
+    public void removeVehicle(Vehicle aCar) {
+        rentals.remove(aCar);
     }
 
     public String getRentals() {
@@ -33,16 +33,7 @@ public class Owner extends User {
 
     @Override
     public String toString() {
-        // return "Owner Information{" +
-        //         "\n First Name: " + firstName +
-        //         "\n Last Name: " + lastname +
-        //         "\n Email: " + email +
-        //         "\n Phone Number: " + phoneNumber +
-        //         "\n Vehicle Info: " + vehicleInfo +
-        //         "\n License Plate: " + licensePlate +
-        //         "\n Residency Time: " + residencyTime + " hours" +
-        //         "\n}";
-
         return "Owner ID: " + this.getUsername() + getRentals();
     }
 }
+

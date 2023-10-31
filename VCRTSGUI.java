@@ -10,7 +10,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -521,7 +520,7 @@ public class VCRTSGUI {
             this.setPassword(String.valueOf(((JPasswordField)e.getSource()).getPassword()));
          }
       }
-      
+
       @Override
       public void clearFields() {
          usernameBox.setText("");
@@ -534,9 +533,9 @@ public class VCRTSGUI {
 
    class JobRequestListener extends Job implements KeyListener, ActionListener, ItemListener, FieldClearer {
       private String timeChoice = "hours";
-      private String month = "";
-      private String day = "";
-      private String year = "";
+      private String month;
+      private String day;
+      private String year;
 
       private JTextField titleBox;
       private JTextArea descriptionBox;
@@ -563,8 +562,7 @@ public class VCRTSGUI {
          if(!this.getTitle().equals("") && !this.getDescription().equals("") && this.getDurationTime() > 0 && 
          !month.equals("") && !day.equals("") && !year.equals("")) {
             
-            String deadline = year + "-" + month + "-" + day;
-            this.setDeadline(LocalDate.parse(deadline));
+            this.setDeadline(month + "/" + day + "/" + year);
 
             Client thisClient;
             if(database.isClient(currentUser.getUsername())) {
@@ -592,6 +590,9 @@ public class VCRTSGUI {
             infoBoxMessage.setText("An error occurred. Please check inputs.");
             infoBox.setVisible(true);
          }
+      }
+
+      public void setDeadline(String string) {
       }
 
       @Override
@@ -664,17 +665,14 @@ public class VCRTSGUI {
          titleBox.setText("");
          descriptionBox.setText("");
          durationTimeBox.setText("");
-         month = "";
          monthBox.setText("");
-         day = "";
          dayBox.setText("");
-         year = "";
          yearBox.setText("");
 
          this.setTitle("");
          this.setDescription("");
          this.setDurationTime(0);
-         this.setDeadline(LocalDate.parse("2000-01-01"));
+         this.setDeadline("");
       }
    }
 

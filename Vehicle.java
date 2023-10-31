@@ -23,6 +23,8 @@ public class Vehicle {
         this.residency = residency;
     }
 
+    // Getters and setters for the new fields
+
     public String getMake() {
         return make;
     }
@@ -87,14 +89,26 @@ public class Vehicle {
         this.computationState = computationState;
     }
 
-    public void completeJob(Job j) {}
+    public void completeJob(Job j) {
+        // Implementation for completing a job
+    }
 
-    //public void startComputationFromCheckpoint
+    public void startComputationFromCheckpoint(Job j) {
+        // Implementation for starting computation from a checkpoint
+    }
+
+    public void copyComputationImage(Vehicle targetVehicle, Job j) {
+        // Implementation for copying computation image to a target vehicle
+    }
+
+    public void eraseAllComputationData() {
+        // Implementation for erasing all computation data
+    }
 
     @Override
     public String toString() {
         return "|Make: " + make + "|Model: " + model + "|License Plate Number: " + licensePlateNumber + "|Residency Time: " + 
         residency + " days";
     }
-    
 }
+

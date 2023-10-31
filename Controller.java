@@ -11,7 +11,6 @@ public class Controller {
 
 
   public void assignJob(Job j) {
-
     jobs.add(j);
     
 
@@ -20,30 +19,19 @@ public class Controller {
     // checkpoint = new Checkpoint(checkpointImage);
 }
 
+  // Trigger a checkpoint for a vehicle
   public void triggerCheckpoint(Vehicle v) {
-
-    String currentComputationState = v.getComputationState();
-    createCheckpoint(currentComputationState);
-
-    System.out.println("Checkpoint triggered for Vehicle " + v.getLicensePlateNumber());
-
+    // Implement the logic for triggering a checkpoint for a vehicle
   }
 
+  // Recruit a new vehicle to replace an old one
   public void recruitNewVehicle(Vehicle oldV, Vehicle newV, Job j) {
-    if (j != null) {
-      // newV.loadCheckpoint(checkpoint);
-      // Vehicle.add(newV);
-      newV.getComputationState();
-  } else {
-      System.out.println("No checkpoint available for recruitment.");
+    // Implement the logic for recruiting a new vehicle to replace an old one
   }
-}
-  
 
+  // Mark a job as completed
   public void setJobCompleted(Job j) {
-
-
-    
+    // Implement the logic for marking a job as completed
   }
 
 
@@ -61,5 +49,4 @@ public class Controller {
 
     
   }
-
 

@@ -1,2 +1,2 @@
-New Sign Up|User ID: avery|Time: Mon Oct 30 16:22:41 EDT 2023
-New Job Submitted|Client ID: avery|Title: 1|Description: 2|Duration Time: 1 minutes |Deadline: 2023-10-29|Time: Mon Oct 30 16:22:59 EDT 2023
+New Sign Up|User ID: krish|Time: Wed Oct 11 14:04:19 EDT 2023
+New Job Submitted|Client ID: krish|Title: driver|Description: drive cars	|Duration Time: 240 minutes |Deadline: 11/11/2023|Time: Wed Oct 11 14:04:49 EDT 2023
