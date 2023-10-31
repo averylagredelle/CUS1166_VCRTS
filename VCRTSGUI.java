@@ -265,6 +265,7 @@ public class VCRTSGUI {
       JLabel divider2 = new JLabel("/");
       JButton submit = new JButton("Submit Job");
       JButton back = new JButton("Back");
+      JButton jobTime = new JButton("Caculating Job Time");
 
       clientIDPanel.setLayout(new BorderLayout());
       clientIDPanel.add(currentClientId, BorderLayout.WEST);
@@ -329,6 +330,7 @@ public class VCRTSGUI {
       jobRequestPanel.add(jobDescriptionSubPanel);
       jobRequestPanel.add(approximateJobDurationSubPanel);
       jobRequestPanel.add(jobDeadlineSubPanel);
+      jobRequestPanel.add(jobTime);
       jobRequestPanel.add(submit);
       jobRequestPanel.add(back);
 
