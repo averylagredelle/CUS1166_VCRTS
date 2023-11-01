@@ -50,6 +50,8 @@ public class VCRTSGUI {
    private Server database = new Server();
    private Controller controller = new Controller();
    private Color colorSalmon;
+   private Color colorPeriwinkle;
+   private Color colorWhite;
 
 
    //Constructor of VCRTSGUI
@@ -74,6 +76,8 @@ public class VCRTSGUI {
       infoBox.add(infoBoxMessage, BorderLayout.CENTER);
 
       colorSalmon = new Color(245, 195, 194);
+      colorPeriwinkle = new Color(124,131,188);
+      colorWhite = new Color(255,255,255);
 
       //start application creates screen output
       startApp(); 
@@ -112,10 +116,14 @@ public class VCRTSGUI {
       login.setName(LOGIN_PAGE_NAME);
       login.addActionListener(switcher);
       pageSwitchButtons.add(login);
+      login.setBackground(colorPeriwinkle);
+      login.setForeground(colorWhite);
 
       signUp.setName(SIGNUP_PAGE_NAME);
       signUp.addActionListener(switcher);
       pageSwitchButtons.add(signUp);
+      signUp.setBackground(colorPeriwinkle);
+      signUp.setForeground(colorWhite);
 
       welcomePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 100, 50));
       welcomePanel.setBounds(0, 0, APP_WIDTH, APP_HEIGHT);
@@ -155,9 +163,13 @@ public class VCRTSGUI {
       password.addKeyListener(verifier);
 
       login.addActionListener(verifier);
+      login.setBackground(colorPeriwinkle);
+      login.setForeground(colorWhite);
 
       back.setName(INTRO_PAGE_NAME);
       back.addActionListener(switcher); //back button
+      back.setBackground(colorPeriwinkle);
+      back.setForeground(colorWhite);
       pageSwitchButtons.add(back);
 
       loginPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 100, 50));
@@ -198,9 +210,13 @@ public class VCRTSGUI {
       password.addKeyListener(verifier);
       
       signup.addActionListener(verifier);
+      signup.setBackground(colorPeriwinkle);
+      signup.setForeground(colorWhite);
  
       back.setName(INTRO_PAGE_NAME);
       back.addActionListener(switcher);
+      back.setBackground(colorPeriwinkle);
+      back.setForeground(colorWhite);
       pageSwitchButtons.add(back);
       
       signUpPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 100, 50));
@@ -231,14 +247,20 @@ public class VCRTSGUI {
       client.setName(CREATE_JOB_REQUEST_PAGE_NAME);
       client.addActionListener(switcher);
       pageSwitchButtons.add(client);
+      client.setBackground(colorPeriwinkle);
+      client.setForeground(colorWhite);
 
       signout.setName(INTRO_PAGE_NAME);
       signout.addActionListener(switcher);
       pageSwitchButtons.add(signout);
+      signout.setBackground(colorPeriwinkle);
+      signout.setForeground(colorWhite);
 
       owner.setName(CREATE_CAR_RENTAL_PAGE_NAME);
       owner.addActionListener(switcher);
       pageSwitchButtons.add(owner);
+      owner.setBackground(colorPeriwinkle);
+      owner.setForeground(colorWhite);
 
       idPanel.setLayout(new BorderLayout());
       idPanel.setBackground(colorSalmon);
@@ -300,6 +322,8 @@ public class VCRTSGUI {
 
       jobTitle.setName("Job Title");
       jobTitle.addKeyListener(jobRequestListener);
+      jobTitle.setBackground(colorPeriwinkle);
+      jobTitle.setForeground(colorWhite);
 
       jobTitleSubPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
       jobTitleSubPanel.setBackground(colorSalmon);
@@ -346,13 +370,19 @@ public class VCRTSGUI {
 
       submit.setName("Submit");
       submit.addActionListener(jobRequestListener);
+      submit.setBackground(colorPeriwinkle);
+      submit.setForeground(colorWhite);
 
       back.setName(MAIN_PAGE_NAME);
       back.addActionListener(switcher);
       pageSwitchButtons.add(back);
+      back.setBackground(colorPeriwinkle);
+      back.setForeground(colorWhite);
 
       jobTime.setName("Calculate Job Time");
       jobTime.addActionListener(jobRequestListener);
+      jobTime.setBackground(colorPeriwinkle);
+      jobTime.setForeground(colorWhite);
 
       jobDeadlineSubPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 0));
       
@@ -421,7 +451,6 @@ public class VCRTSGUI {
       plate.addKeyListener(rentalRequestListener);
       
       plateSubPanel.setLayout(new BorderLayout(5, 0));
-      plateSubPanel.setBackground(colorSalmon);
       plateSubPanel.add(plateLabel, BorderLayout.WEST);
       plateSubPanel.add(plate,BorderLayout.EAST);
 
@@ -436,10 +465,14 @@ public class VCRTSGUI {
       durationSubPanel.add(duration,BorderLayout.CENTER);
       
       rentCar.addActionListener(rentalRequestListener);
+      rentCar.setBackground(colorPeriwinkle);
+      rentCar.setForeground(colorWhite);
 
       back.setName(MAIN_PAGE_NAME);
       back.addActionListener(switcher);
       pageSwitchButtons.add(back);
+      back.setBackground(colorPeriwinkle);
+      back.setForeground(colorWhite);
 
       carRentalPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 100, 50));
       carRentalPanel.add(header);
