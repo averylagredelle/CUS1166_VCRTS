@@ -39,4 +39,17 @@ public class Client extends User {
   public String toString() {
     return "Client ID: " + this.getUsername() + getQueuedJobs();
   }
+
+  //VCController
+ /* public class VCController {
+    private Queue<Job> jobList;
+    private Queue<Vehicle> vehicleList;
+    private PrintStream completedJobsOutput;
+    
+    public VCController() throws FileNotFoundException {
+      jobList = new LinkedList<Job>();
+      vehicleList = new LinkedList<Vehicle>();
+      completedJobsOutput = new PrintStream(new File("completedJobs.txt"));
+    }
+    */
 }
