@@ -259,7 +259,7 @@ public class VCRTSGUI {
       owner.setBackground(colorPeriwinkle);
       owner.setBorderPainted(false);
       owner.setOpaque(true);
-      JButton client = new JButton("Request Job As Client");//add button design
+      JButton client = new JButton("Request Job As Client");
       client.setBackground(colorPeriwinkle);
       client.setBorderPainted(false);
       client.setOpaque(true);
@@ -338,8 +338,17 @@ public class VCRTSGUI {
       JLabel divider = new JLabel("/");
       JLabel divider2 = new JLabel("/");
       JButton submit = new JButton("Submit Job");
+      submit.setBackground(colorPeriwinkle);
+      submit.setBorderPainted(false);
+      submit.setOpaque(true);
       JButton back = new JButton("Back");
+      back.setBackground(colorPeriwinkle);
+      back.setBorderPainted(false);
+      back.setOpaque(true);
       JButton jobTime = new JButton("Caculate Job Time");
+      jobTime.setBackground(colorPeriwinkle);
+      jobTime.setBorderPainted(false);
+      jobTime.setOpaque(true);
 
       //design of Job Request Page
       clientIDPanel.setLayout(new BorderLayout());
@@ -457,7 +466,13 @@ public class VCRTSGUI {
       String[] timeOptions = {"days", "months"};
       JComboBox<String> rentDurationTimes = new JComboBox<String>(timeOptions);
       JButton rentCar = new JButton("Rent Car");
+      rentCar.setBackground(colorPeriwinkle);
+      rentCar.setBorderPainted(false);
+      rentCar.setOpaque(true);
       JButton back = new JButton("Back");
+      back.setBackground(colorPeriwinkle);
+      back.setBorderPainted(false);
+      back.setOpaque(true);
 
       currentOwnerPanel.setLayout(new BorderLayout());
       currentOwnerPanel.setBackground(colorSalmon);
