@@ -12,6 +12,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.awt.Color;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -57,6 +58,8 @@ public class VCRTSGUI {
       frame.setSize(APP_WIDTH, APP_HEIGHT);
       frame.setResizable(false);
       frame.setLocation(600, 100);
+      frame.getContentPane().setBackground(Color.BLUE);
+
 
       infoBoxMessage.setHorizontalAlignment(JLabel.CENTER);
       
@@ -112,7 +115,7 @@ public class VCRTSGUI {
 
       welcomePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 100, 50));
       welcomePanel.setBounds(0, 0, APP_WIDTH, APP_HEIGHT);
-
+      welcomePanel.setBackground(new Color(245, 195, 194));
       welcomePanel.add(welcomeMessage);
       welcomePanel.add(explanation);
       welcomePanel.add(signUp);
@@ -134,12 +137,14 @@ public class VCRTSGUI {
       JButton back = new JButton("Back");
 
       usernameSubpanel.setLayout(new BorderLayout(5, 0));
+      usernameSubpanel.setBackground(new Color(245, 195, 194));
       usernameSubpanel.add(usernameLabel, BorderLayout.WEST);
       usernameSubpanel.add(username, BorderLayout.EAST);
 
       username.addKeyListener(verifier);
 
       passwordSubpanel.setLayout(new BorderLayout(5, 0));
+      passwordSubpanel.setBackground(new Color(245, 195, 194));
       passwordSubpanel.add(passwordLabel, BorderLayout.WEST);
       passwordSubpanel.add(password, BorderLayout.EAST);
 
@@ -152,6 +157,7 @@ public class VCRTSGUI {
       pageSwitchButtons.add(back);
 
       loginPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 100, 50));
+      loginPanel.setBackground(new Color(245, 195, 194));
 
       loginPanel.add(message);
       loginPanel.add(usernameSubpanel);
@@ -176,11 +182,13 @@ public class VCRTSGUI {
 
       //sets username of the new sign up
       usernameSubpanel.setLayout(new BorderLayout(5, 0));
+      usernameSubpanel.setBackground(new Color(245, 195, 194));
       usernameSubpanel.add(usernameLabel, BorderLayout.WEST);
       usernameSubpanel.add(username, BorderLayout.EAST);
       username.addKeyListener(verifier);
 
       passwordSubpanel.setLayout(new BorderLayout(5, 0));
+      passwordSubpanel.setBackground(new Color(245, 195, 194));
       passwordSubpanel.add(passwordLabel, BorderLayout.WEST);
       passwordSubpanel.add(password, BorderLayout.EAST);
       password.addKeyListener(verifier);
@@ -192,6 +200,7 @@ public class VCRTSGUI {
       pageSwitchButtons.add(back);
       
       signUpPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 100, 50));
+      signUpPanel.setBackground(new Color(245, 195, 194));
 
       signUpPanel.add(header);
       signUpPanel.add(usernameSubpanel);
@@ -228,19 +237,23 @@ public class VCRTSGUI {
       pageSwitchButtons.add(owner);
 
       idPanel.setLayout(new BorderLayout());
+      idPanel.setBackground(new Color(245, 195, 194));
       idPanel.add(currentUserId, BorderLayout.WEST);
 
       headerSubPanel.setLayout(new BorderLayout());
+      headerSubPanel.setBackground(new Color(245, 195, 194));
       headerSubPanel.add(header, BorderLayout.NORTH);
       headerSubPanel.add(header2, BorderLayout.SOUTH);
 
       mainPageContentPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 150, 75));
+      mainPageContentPanel.setBackground(new Color(245, 195, 194));
       mainPageContentPanel.add(headerSubPanel);
       mainPageContentPanel.add(owner);
       mainPageContentPanel.add(client);
       mainPageContentPanel.add(signout);
 
       mainPanel.setLayout(new BorderLayout());
+      mainPanel.setBackground(new Color(245, 195, 194));
       mainPanel.add(idPanel, BorderLayout.NORTH);
       mainPanel.add(mainPageContentPanel, BorderLayout.CENTER);
       frame.add(mainPanel, MAIN_PAGE_NAME);
@@ -278,12 +291,14 @@ public class VCRTSGUI {
 
       //design of Job Request Page
       clientIDPanel.setLayout(new BorderLayout());
+      clientIDPanel.setBackground(new Color(245, 195, 194));
       clientIDPanel.add(currentClientId, BorderLayout.WEST);
 
       jobTitle.setName("Job Title");
       jobTitle.addKeyListener(jobRequestListener);
 
       jobTitleSubPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+      jobTitleSubPanel.setBackground(new Color(245, 195, 194));
       jobTitleSubPanel.add(jobTitleLabel);
       jobTitleSubPanel.add(jobTitle);
 
@@ -291,6 +306,7 @@ public class VCRTSGUI {
       jobDescription.addKeyListener(jobRequestListener);
       
       jobDescriptionSubPanel.setLayout(new BorderLayout());
+      jobDescriptionSubPanel.setBackground(new Color(245, 195, 194));
       jobDescriptionSubPanel.add(jobDescriptionLabel, BorderLayout.NORTH);
       jobDescriptionSubPanel.add(jobDescription, BorderLayout.SOUTH);
 
@@ -300,6 +316,7 @@ public class VCRTSGUI {
       jobDurationTimes.addItemListener(jobRequestListener);
       
       approximateJobDurationSubPanel.setLayout(new GridLayout(1, 3, 10, 0));
+      approximateJobDurationSubPanel.setBackground(new Color(245, 195, 194));
       approximateJobDurationSubPanel.add(approximateJobDurationLabel);
       approximateJobDurationSubPanel.add(approximateJobDuration);
       approximateJobDurationSubPanel.add(jobDurationTimes);
@@ -334,6 +351,7 @@ public class VCRTSGUI {
       jobTime.addActionListener(jobRequestListener);
 
       jobDeadlineSubPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 0));
+      
       jobDeadlineSubPanel.setSize(40, 40);
       jobDeadlineSubPanel.add(jobDeadlineLabel);
       jobDeadlineSubPanel.add(dateSubPanel);
@@ -399,6 +417,7 @@ public class VCRTSGUI {
       plate.addKeyListener(rentalRequestListener);
       
       plateSubPanel.setLayout(new BorderLayout(5, 0));
+      plateSubPanel.setBackground(new Color(245, 195, 194));
       plateSubPanel.add(plateLabel, BorderLayout.WEST);
       plateSubPanel.add(plate,BorderLayout.EAST);
 
