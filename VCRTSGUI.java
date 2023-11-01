@@ -652,7 +652,6 @@ public class VCRTSGUI {
             }
 
             Job newJob = new Job(this.getTitle(), this.getDescription(), this.getDurationTime(), this.getDeadline());
-            System.out.println(newJob.getDurationTime());
 
             if(((JButton)e.getSource()).getName().equals("Calculate Job Time")) {
                jobTimeCompletionChecked = true;
