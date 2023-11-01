@@ -401,6 +401,7 @@ public class VCRTSGUI {
       jobRequestPanel.add(jobTime);
 
       mainPanel.setLayout(new BorderLayout());
+      mainPanel.setBackground(new Color(245, 195, 194));
       mainPanel.add(clientIDPanel, BorderLayout.NORTH);
       mainPanel.add(jobRequestPanel, BorderLayout.CENTER);
       frame.add(mainPanel, CREATE_JOB_REQUEST_PAGE_NAME);
@@ -431,6 +432,7 @@ public class VCRTSGUI {
       JButton back = new JButton("Back");
 
       currentOwnerPanel.setLayout(new BorderLayout());
+      currentOwnerPanel.setBackground(new Color(245, 195, 194));
       currentOwnerPanel.add(currentOwnerId, BorderLayout.WEST);
 
       make.setName("Car Make");
@@ -484,6 +486,8 @@ public class VCRTSGUI {
       carRentalPanel.add(back);
 
       mainPanel.setLayout(new BorderLayout());
+      mainPanel.setBackground(new Color(245, 195, 194));
+
       mainPanel.add(currentOwnerPanel, BorderLayout.NORTH);
       mainPanel.add(carRentalPanel, BorderLayout.CENTER);
       frame.add(mainPanel, CREATE_CAR_RENTAL_PAGE_NAME);
