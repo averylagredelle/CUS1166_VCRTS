@@ -74,9 +74,9 @@ public class VCRTSGUI {
       infoBox.setModalityType(ModalityType.APPLICATION_MODAL);
       infoBox.add(infoBoxMessage, BorderLayout.CENTER);
 
-      colorSalmon = new Color(245, 195, 194);
-      colorPeriwinkle = new Color(124,131,188);
-      colorWhite = new Color(255,255,255);
+      colorSalmon = new Color(245, 195, 194);//background color
+      colorPeriwinkle = new Color(124,131,188);//button color
+      colorWhite = new Color(255,255,255);//text color
 
       //start application creates screen output
       startApp(); 
@@ -553,7 +553,7 @@ public class VCRTSGUI {
          }
       }
    }
-
+//verifies the user
    class UserVerifier extends User implements ActionListener, KeyListener, FieldClearer {
       private JTextField usernameBox;
       private JPasswordField passwordBox;
