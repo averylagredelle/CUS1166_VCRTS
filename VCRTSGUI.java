@@ -205,7 +205,13 @@ public class VCRTSGUI {
       JLabel passwordLabel = new JLabel("Enter Password: ");
       JPasswordField password = new JPasswordField(20);
       JButton signup = new JButton("Sign Up");
+      signup.setBackground(colorPeriwinkle);
+      signup.setBorderPainted(false);
+      signup.setOpaque(true);
       JButton back = new JButton("Back");
+      back.setBackground(colorPeriwinkle);
+      back.setBorderPainted(false);
+      back.setOpaque(true);
 
       //sets username of the new sign up
       usernameSubpanel.setLayout(new BorderLayout(5, 0));
