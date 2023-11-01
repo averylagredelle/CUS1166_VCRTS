@@ -255,7 +255,7 @@ public class VCRTSGUI {
       JPanel headerSubPanel = new JPanel();
       JLabel header = new JLabel("Select whether you would like to rent out your car as an owner or");
       JLabel header2 = new JLabel("submit a job request as a client below.");
-      JButton owner = new JButton("Rent Car As Owner");
+      JButton owner = new JButton("Rent Car As Owner");//add button design
       JButton client = new JButton("Request Job As Client");
       JButton signout = new JButton("Sign Out");
 
