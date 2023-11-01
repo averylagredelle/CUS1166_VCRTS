@@ -255,8 +255,11 @@ public class VCRTSGUI {
       JPanel headerSubPanel = new JPanel();
       JLabel header = new JLabel("Select whether you would like to rent out your car as an owner or");
       JLabel header2 = new JLabel("submit a job request as a client below.");
-      JButton owner = new JButton("Rent Car As Owner");//add button design
-      JButton client = new JButton("Request Job As Client");
+      JButton owner = new JButton("Rent Car As Owner");
+      owner.setBackground(colorPeriwinkle);
+      owner.setBorderPainted(false);
+      owner.setOpaque(true);
+      JButton client = new JButton("Request Job As Client");//add button design
       JButton signout = new JButton("Sign Out");
 
       header2.setHorizontalAlignment(JLabel.CENTER);
