@@ -13,8 +13,9 @@ public class Client extends User {
     requestedJobs = new ArrayList<Job>();
   }
 
-  public void submitJob(Job j) {
+  public void submitJob(Job j, Controller c) {
     requestedJobs.add(j);
+    c.assignJob(j);
     //c.processJob(j); // You can add logic here to process the job using the provided controller.
   }
 

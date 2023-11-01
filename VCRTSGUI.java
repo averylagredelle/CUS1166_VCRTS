@@ -591,7 +591,7 @@ public class VCRTSGUI {
                infoBox.setVisible(true);
             }
             else {
-               thisClient.submitJob(newJob);
+               thisClient.submitJob(newJob, controller);
                controller.assignJob(newJob);
 
                if(!database.isClient(thisClient.getUsername())) {
@@ -732,7 +732,7 @@ public class VCRTSGUI {
             }
 
             Vehicle newRental = new Vehicle(this.getMake(), this.getModel(), this.getLicensePlateNumber(), this.getResidency());
-            thisOwner.rentVehicle(newRental);
+            thisOwner.rentVehicle(newRental, controller);
 
             if(!database.isOwner(thisOwner.getUsername())) {
                database.addOwner(thisOwner);
