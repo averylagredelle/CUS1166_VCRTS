@@ -582,7 +582,6 @@ public class VCRTSGUI {
             
             String deadline = year + "-" + month + "-" + day;
             this.setDeadline(LocalDate.parse(deadline));
-            this.setDeadline("");
 
             Client thisClient;
             if(database.isClient(currentUser.getUsername())) {
@@ -593,6 +592,7 @@ public class VCRTSGUI {
             }
 
             Job newJob = new Job(this.getTitle(), this.getDescription(), this.getDurationTime(), this.getDeadline());
+            System.out.println(newJob.getDurationTime());
 
             if(((JButton)e.getSource()).getName().equals("Calculate Job Time")) {
                jobTimeCompletionChecked = true;
@@ -601,7 +601,6 @@ public class VCRTSGUI {
             }
             else {
                thisClient.submitJob(newJob, controller);
-               controller.assignJob(newJob);
 
                if(!database.isClient(thisClient.getUsername())) {
                   database.addClient(thisClient);
