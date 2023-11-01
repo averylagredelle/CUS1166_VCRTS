@@ -1,0 +1,3 @@
+New Sign Up|User ID: avery|Time: Wed Nov 01 13:53:41 EDT 2023
+New Job Submitted|Client ID: avery|Title: do hw|Description: Help me with it|Duration Time: 120 minutes |Deadline: 2024-10-29|Time: Wed Nov 01 13:54:03 EDT 2023
+New Job Submitted|Client ID: avery|Title: do hw|Description: Help me with it|Duration Time: 120 minutes |Deadline: 2024-10-29|Title: do house work|Description: Home needs cleaning|Duration Time: 20 minutes |Deadline: 2023-11-21|Time: Wed Nov 01 13:54:41 EDT 2023

@@ -357,8 +357,6 @@ public class VCRTSGUI {
 
       jobTitle.setName("Job Title");
       jobTitle.addKeyListener(jobRequestListener);
-      jobTitle.setBackground(colorWhite);
-      jobTitle.setForeground(colorWhite);
 
       jobTitleSubPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
       jobTitleSubPanel.setBackground(colorSalmon);
