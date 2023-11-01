@@ -64,7 +64,6 @@ public class VCRTSGUI {
       frame.setLocation(600, 100);
       frame.getContentPane().setBackground(Color.BLUE);
 
-
       infoBoxMessage.setHorizontalAlignment(JLabel.CENTER);
       
       infoBox.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -105,7 +104,13 @@ public class VCRTSGUI {
       JLabel welcomeMessage = new JLabel("Welcome to this Vehicular Cloud Real Time System!");
       JTextArea explanation = new JTextArea("If you already have an account with us, select \"Login\" below. If this is your first time using this vehicular cloud system, click the \"Sign Up\" button.");
       JButton signUp = new JButton("Sign Up");
+      signUp.setBackground(colorPeriwinkle);
+      signUp.setBorderPainted(false);
+      signUp.setOpaque(true);
       JButton login = new JButton("Login");
+      login.setBackground(colorPeriwinkle);
+      login.setBorderPainted(false);
+      login.setOpaque(true);
 
       explanation.setEditable(false);
       explanation.setFocusable(false);
