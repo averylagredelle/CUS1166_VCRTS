@@ -260,7 +260,13 @@ public class VCRTSGUI {
       owner.setBorderPainted(false);
       owner.setOpaque(true);
       JButton client = new JButton("Request Job As Client");//add button design
+      client.setBackground(colorPeriwinkle);
+      client.setBorderPainted(false);
+      client.setOpaque(true);
       JButton signout = new JButton("Sign Out");
+      signout.setBackground(colorPeriwinkle);
+      signout.setBorderPainted(false);
+      signout.setOpaque(true);
 
       header2.setHorizontalAlignment(JLabel.CENTER);
 
