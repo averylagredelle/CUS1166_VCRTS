@@ -76,7 +76,7 @@ public class VCRTSGUI {
       infoBox.add(infoBoxMessage, BorderLayout.CENTER);
 
       colorSalmon = new Color(245, 195, 194);
-      colorPeriwinkle = new Color(124,131,188);
+      colorPeriwinkle = new Color(0,0,0);
       colorWhite = new Color(255,255,255);
 
       //start application creates screen output
