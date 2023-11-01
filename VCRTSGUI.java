@@ -151,7 +151,13 @@ public class VCRTSGUI {
       JLabel passwordLabel = new JLabel("Password: ");
       JPasswordField password = new JPasswordField(20);
       JButton login = new JButton("Login");
+      login.setBackground(colorPeriwinkle);
+      login.setBorderPainted(false);
+      login.setOpaque(true);
       JButton back = new JButton("Back");
+      back.setBackground(colorPeriwinkle);
+      back.setBorderPainted(false);
+      back.setOpaque(true);
 
       usernameSubpanel.setLayout(new BorderLayout(5, 0));
       usernameSubpanel.setBackground(colorSalmon);
