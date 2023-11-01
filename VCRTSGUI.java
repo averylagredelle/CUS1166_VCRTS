@@ -390,12 +390,14 @@ public class VCRTSGUI {
       jobTime.setForeground(colorWhite);
 
       jobDeadlineSubPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 0));
+      jobDeadlineSubPanel.setBackground(colorSalmon);
       
       jobDeadlineSubPanel.setSize(40, 40);
       jobDeadlineSubPanel.add(jobDeadlineLabel);
       jobDeadlineSubPanel.add(dateSubPanel);
 
       jobRequestPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 30));
+      jobRequestPanel.setBackground(colorSalmon);
       jobRequestPanel.add(header);
       jobRequestPanel.add(jobTitleSubPanel);
       jobRequestPanel.add(jobDescriptionSubPanel);
@@ -406,7 +408,7 @@ public class VCRTSGUI {
       jobRequestPanel.add(jobTime);
 
       mainPanel.setLayout(new BorderLayout());
-      mainPanel.setBackground(new Color(245, 195, 194));
+      mainPanel.setBackground(colorSalmon);
       mainPanel.add(clientIDPanel, BorderLayout.NORTH);
       mainPanel.add(jobRequestPanel, BorderLayout.CENTER);
       frame.add(mainPanel, CREATE_JOB_REQUEST_PAGE_NAME);
@@ -437,13 +439,14 @@ public class VCRTSGUI {
       JButton back = new JButton("Back");
 
       currentOwnerPanel.setLayout(new BorderLayout());
-      currentOwnerPanel.setBackground(new Color(245, 195, 194));
+      currentOwnerPanel.setBackground(colorSalmon);
       currentOwnerPanel.add(currentOwnerId, BorderLayout.WEST);
 
       make.setName("Car Make");
       make.addKeyListener(rentalRequestListener);
       
       makeSubPanel.setLayout(new BorderLayout(5,0));
+      makeSubPanel.setBackground(colorSalmon);
       makeSubPanel.add(makeLabel, BorderLayout.WEST);
       makeSubPanel.add(make, BorderLayout.EAST);
 
@@ -451,6 +454,7 @@ public class VCRTSGUI {
       model.addKeyListener(rentalRequestListener);
       
       modelSubPanel.setLayout(new BorderLayout(5,0));
+      modelSubPanel.setBackground(colorSalmon);
       modelSubPanel.add(modelLabel, BorderLayout.WEST);
       modelSubPanel.add(model, BorderLayout.EAST);
 
@@ -458,6 +462,7 @@ public class VCRTSGUI {
       plate.addKeyListener(rentalRequestListener);
       
       plateSubPanel.setLayout(new BorderLayout(5, 0));
+      plateSubPanel.setBackground(colorSalmon);
       plateSubPanel.add(plateLabel, BorderLayout.WEST);
       plateSubPanel.add(plate,BorderLayout.EAST);
 
@@ -467,6 +472,7 @@ public class VCRTSGUI {
       rentDurationTimes.addItemListener(rentalRequestListener);
       
       durationSubPanel.setLayout(new BorderLayout(5, 0));
+      durationSubPanel.setBackground(colorSalmon);
       durationSubPanel.add(durationLabel, BorderLayout.WEST);
       durationSubPanel.add(rentDurationTimes, BorderLayout.EAST);
       durationSubPanel.add(duration,BorderLayout.CENTER);
@@ -482,6 +488,7 @@ public class VCRTSGUI {
       back.setForeground(colorWhite);
 
       carRentalPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 100, 50));
+      carRentalPanel.setBackground(colorSalmon);
       carRentalPanel.add(header);
       carRentalPanel.add(makeSubPanel);
       carRentalPanel.add(modelSubPanel);
@@ -491,8 +498,9 @@ public class VCRTSGUI {
       carRentalPanel.add(back);
 
       mainPanel.setLayout(new BorderLayout());
+      
       mainPanel.setBackground(new Color(245, 195, 194));
-
+      mainPanel.setBackground(colorSalmon);
       mainPanel.add(currentOwnerPanel, BorderLayout.NORTH);
       mainPanel.add(carRentalPanel, BorderLayout.CENTER);
       frame.add(mainPanel, CREATE_CAR_RENTAL_PAGE_NAME);
