@@ -1,1 +1,2 @@
-
+New Sign Up|User ID: avery|Time: Tue Oct 31 22:43:28 EDT 2023
+New Rental Added|Owner ID: avery|Make: toyota|Model: rav4|License Plate Number: 123abc|Residency Time: 10 days|Time: Tue Oct 31 22:43:47 EDT 2023
