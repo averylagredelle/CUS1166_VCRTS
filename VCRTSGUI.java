@@ -23,6 +23,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+//Define class
 public class VCRTSGUI {
    private JFrame frame = new JFrame();
    private JDialog infoBox = new JDialog();
@@ -48,6 +49,7 @@ public class VCRTSGUI {
    private Server database = new Server();
    private Controller controller = new Controller();
    
+   //Constructor of VCRTSGUI
    public VCRTSGUI() {
       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       frame.setLayout(new CardLayout());
@@ -66,14 +68,17 @@ public class VCRTSGUI {
       infoBox.setModalityType(ModalityType.APPLICATION_MODAL);
       infoBox.add(infoBoxMessage, BorderLayout.CENTER);
 
-      startApp();
+      //start application creates screen output
+      startApp(); 
       frame.setVisible(true);
    }
 
+   //main method that launches the GUI 
    public static void main(String[] args) {
       new VCRTSGUI();
    }
 
+   //creates the screens of the GUI
    public void startApp() {
       createIntroScreen();
       createLoginScreen();
@@ -83,7 +88,7 @@ public class VCRTSGUI {
       createCarRentalPage();
    }
 
-
+//creates the intro screen
    public void createIntroScreen() {
       JPanel welcomePanel = new JPanel();
       JLabel welcomeMessage = new JLabel("Welcome to this Vehicular Cloud Real Time System!");
@@ -115,7 +120,7 @@ public class VCRTSGUI {
       frame.add(welcomePanel, INTRO_PAGE_NAME);
       screens.add(INTRO_PAGE_NAME);
    }
-
+   //creates the login screen
    public void createLoginScreen() {
       JPanel loginPanel = new JPanel();
       JLabel message = new JLabel("Welcome Back User! Please Login Below");
@@ -156,7 +161,7 @@ public class VCRTSGUI {
       frame.add(loginPanel, LOGIN_PAGE_NAME);
       screens.add(LOGIN_PAGE_NAME);
    }
-
+//creates sign up screen
    public void createSignUpScreen() {
       JPanel signUpPanel = new JPanel();
       JLabel header = new JLabel("Welcome, Please Enter The Following Information");
@@ -169,6 +174,7 @@ public class VCRTSGUI {
       JButton signup = new JButton("Sign Up");
       JButton back = new JButton("Back");
 
+      //sets username of the new sign up
       usernameSubpanel.setLayout(new BorderLayout(5, 0));
       usernameSubpanel.add(usernameLabel, BorderLayout.WEST);
       usernameSubpanel.add(username, BorderLayout.EAST);
@@ -195,7 +201,7 @@ public class VCRTSGUI {
       frame.add(signUpPanel, SIGNUP_PAGE_NAME);
       screens.add(SIGNUP_PAGE_NAME);
    }
-
+   //creates the main page of the GUI
    public void createMainPage() {
       JPanel mainPanel = new JPanel();
       JPanel idPanel = new JPanel();
@@ -241,6 +247,7 @@ public class VCRTSGUI {
       screens.add(MAIN_PAGE_NAME);
    }
 
+   //creates job request page
    public void createJobRequestPage() {
       JPanel mainPanel = new JPanel();
       JPanel clientIDPanel = new JPanel();
@@ -269,6 +276,7 @@ public class VCRTSGUI {
       JButton back = new JButton("Back");
       JButton jobTime = new JButton("Caculate Job Time");
 
+      //design of Job Request Page
       clientIDPanel.setLayout(new BorderLayout());
       clientIDPanel.add(currentClientId, BorderLayout.WEST);
 
@@ -347,7 +355,8 @@ public class VCRTSGUI {
       screens.add(CREATE_JOB_REQUEST_PAGE_NAME);
    }
    
-   public void createCarRentalPage() { //page for owners of vehicles to give their cars up for rent
+   //page for owners of vehicles to give their cars for rent
+   public void createCarRentalPage() { 
       JPanel mainPanel = new JPanel();
       JPanel currentOwnerPanel = new JPanel();
       JPanel carRentalPanel = new JPanel();
