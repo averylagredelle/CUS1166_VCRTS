@@ -13,12 +13,14 @@ public class Owner extends User {
         rentals = new ArrayList<Vehicle>();
     }
 
-    public void rentVehicle(Vehicle aCar) {
-        rentals.add(aCar);
+    public void rentVehicle(Vehicle v, Controller c) {
+        rentals.add(v);
+        c.addVehicle(v);
     }
 
-    public void removeVehicle(Vehicle aCar) {
-        rentals.remove(aCar);
+    public void removeVehicle(Vehicle v, Controller c) {
+        rentals.remove(v);
+        c.removeVehicle(v);
     }
 
     public String getRentals() {

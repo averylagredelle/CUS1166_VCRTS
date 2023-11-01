@@ -6,7 +6,7 @@ public class Controller {
   private ArrayList<Job> jobs;
   private Server server;
   private int redundancyLevel;
-  private boolean checkpoint;
+  //private boolean checkpoint;
   
   private int minutesFromStart;
   private HashMap<Job, Integer> completionTimes;
@@ -23,9 +23,9 @@ public class Controller {
     minutesFromStart += j.getDurationTime();
   }
 
-  public void createCheckpoint(String checkpointImage) {
-    // checkpoint = new Checkpoint(checkpointImage);
-  }
+  // public void createCheckpoint(String checkpointImage) {
+  //   // checkpoint = new Checkpoint(checkpointImage);
+  // }
 
   // Trigger a checkpoint for a vehicle
   public void triggerCheckpoint(Vehicle v) {
@@ -33,13 +33,21 @@ public class Controller {
   }
 
   // Recruit a new vehicle to replace an old one
-  public void recruitNewVehicle(Vehicle oldV, Vehicle newV, Job j) {
+  public void recruitNewVehicle(Vehicle oldV, Vehicle newV) {
     // Implement the logic for recruiting a new vehicle to replace an old one
   }
 
   // Mark a job as completed
   public void setJobCompleted(Job j) {
     // Implement the logic for marking a job as completed
+  }
+
+  public void addVehicle(Vehicle v) {
+    vehicles.add(v);
+  }
+
+  public void removeVehicle(Vehicle v) {
+    vehicles.remove(v);
   }
 
 
