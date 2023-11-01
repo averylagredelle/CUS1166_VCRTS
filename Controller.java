@@ -7,7 +7,8 @@ public class Controller {
   private Server server;
   private int redundancyLevel;
   //private boolean checkpoint;
-  
+
+
   private int minutesFromStart;
   private HashMap<Job, Integer> completionTimes;
 
@@ -16,6 +17,9 @@ public class Controller {
     vehicles = new ArrayList<Vehicle>();
     minutesFromStart = 0;
     completionTimes = new HashMap<Job, Integer>();
+    //completed jobs output
+    //completedJobsOutput into new file "completedjobs.txt"
+    //throws FileNotFoundException
   }
 
   public void assignJob(Job j) {
