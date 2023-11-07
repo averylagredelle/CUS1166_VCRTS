@@ -24,7 +24,10 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-//Define class
+/**
+ * This is the GUI class that creates the frame that allows car owners and job owners to interact with the Vehicular Cloud System.
+ * @author Software Engineering Capstone Project Group 1
+ */
 public class VCRTSGUI {
    private JFrame frame = new JFrame();
    private JDialog infoBox = new JDialog();
@@ -54,7 +57,9 @@ public class VCRTSGUI {
    private Color colorWhite;
 
 
-   //Constructor of VCRTSGUI
+   /**
+    * Initializes the GUI of the Vehicular Cloud System.
+    */
    public VCRTSGUI() {
       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       frame.setLayout(new CardLayout());
@@ -83,12 +88,17 @@ public class VCRTSGUI {
       frame.setVisible(true);
    }
 
-   //main method that launches the GUI 
+   /**
+    * This is the main method that launches the GUI, making it visible to users. 
+    * @param args the command line arguments
+    */
    public static void main(String[] args) {
       new VCRTSGUI();
    }
 
-   //creates the screens of the GUI
+   /**
+    * Creates the various screens of the GUI that users can navigate to.
+    */
    public void startApp() {
       createIntroScreen();
       createLoginScreen();
@@ -98,7 +108,9 @@ public class VCRTSGUI {
       createCarRentalPage();
    }
 
-//creates the intro screen
+   /**
+    * Creates the intro screen for the GUI. This is the first screen that users see upon opening the app.
+    */
    public void createIntroScreen() {
       JPanel welcomePanel = new JPanel();
       JLabel welcomeMessage = new JLabel("Welcome to this Vehicular Cloud Real Time System!");
@@ -140,7 +152,10 @@ public class VCRTSGUI {
       frame.add(welcomePanel, INTRO_PAGE_NAME);
       screens.add(INTRO_PAGE_NAME);
    }
-   //creates the login screen
+
+   /**
+    * Creates the login screen for the GUI. This is the screen that users will see when logging in with an existing account.
+    */
    public void createLoginScreen() {
       JPanel loginPanel = new JPanel();
       JLabel message = new JLabel("Welcome Back User! Please Login Below");
@@ -194,7 +209,11 @@ public class VCRTSGUI {
       frame.add(loginPanel, LOGIN_PAGE_NAME);
       screens.add(LOGIN_PAGE_NAME);
    }
-//creates sign up screen
+
+   /**
+    * Creates the sign up screen for the GUI. This is the screen that users will see when signing up to the 
+    * Vehicular Cloud System for the first time.
+    */
    public void createSignUpScreen() {
       JPanel signUpPanel = new JPanel();
       JLabel header = new JLabel("Welcome, Please Enter The Following Information");
@@ -247,7 +266,12 @@ public class VCRTSGUI {
       frame.add(signUpPanel, SIGNUP_PAGE_NAME);
       screens.add(SIGNUP_PAGE_NAME);
    }
-   //creates the main page of the GUI
+
+   /**
+    * Creates the main page of the GUI. From this page, users will be able to rent new cars to the Vehicular Cloud 
+    * System or request new jobs. The user's ID (the username that they signed up with or logged in with) is displayed 
+    * in the top left corner.
+    */
    public void createMainPage() {
       JPanel mainPanel = new JPanel();
       JPanel idPanel = new JPanel();
@@ -312,7 +336,10 @@ public class VCRTSGUI {
       screens.add(MAIN_PAGE_NAME);
    }
 
-   //creates job request page
+   /**
+    * Creates the job request page of the GUI. From this page users will be able to submit new jobs to the 
+    * Vehicular Cloud System.
+    */
    public void createJobRequestPage() {
       JPanel mainPanel = new JPanel();
       JPanel clientIDPanel = new JPanel();
@@ -443,7 +470,9 @@ public class VCRTSGUI {
       screens.add(CREATE_JOB_REQUEST_PAGE_NAME);
    }
    
-   //page for owners of vehicles to give their cars for rent
+   /**
+    * Creates the car rental page of the GUI. From this page, users will be able to rent new cars to the Vehicular Cloud System.
+    */
    public void createCarRentalPage() { 
       JPanel mainPanel = new JPanel();
       JPanel currentOwnerPanel = new JPanel();
@@ -541,10 +570,22 @@ public class VCRTSGUI {
       screens.add(CREATE_CAR_RENTAL_PAGE_NAME);
    }
 
+   /**
+    * An interface to clear the fields for any GUI page with forms to fill out.
+    * @author Avery Lagredelle
+    */
    interface FieldClearer {
+      /**
+       * Clears any text boxes, text fields, or other text inputs on a given page of a GUI.
+       */
       public void clearFields();
    }
 
+   /**
+    * This class listens for when a button is pressed that is meant to switch a page. It works together with 
+    * the ArrayList of page switch buttons in the main GUI class, and uses the name of the button to pull up 
+    * the corresponding page in the ArrayList of page names in the main GUI class.
+    */
    class PageSwitcher implements ActionListener {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -575,11 +616,19 @@ public class VCRTSGUI {
          }
       }
    }
-//verifies the user
+
+   /**
+    * This class is used to verify users who log in or sign up for the first time. It listens for when a user is signing up or 
+    * logging in and checks to make sure that their log in information is correct before logging them in or checks to make sure 
+    * that the information they are signing up with doesn't already have an account tied to it.
+    */
    class UserVerifier extends User implements ActionListener, KeyListener, FieldClearer {
       private JTextField usernameBox;
       private JPasswordField passwordBox;
 
+      /**
+       * Initializes UserVerifier object.
+       */
       public UserVerifier() {
          super();
          usernameBox = new JTextField();
@@ -619,6 +668,9 @@ public class VCRTSGUI {
          }
       }
 
+      /**
+       * Shows the main page of the GUI.
+       */
       public void showMainPage() {
          ((CardLayout)frame.getContentPane().getLayout()).show(frame.getContentPane(), MAIN_PAGE_NAME);
       }
@@ -655,6 +707,11 @@ public class VCRTSGUI {
       }
    }
 
+   /**
+    * This class is used for when users submit new jobs to the Vehicular Cloud System. It listens for events that take place 
+    * on the job request page, such as the submit button being pressed, the fields being filled in, or a request for the job 
+    * completion time being made.
+    */
    class JobRequestListener extends Job implements KeyListener, ActionListener, ItemListener, FieldClearer {
       private boolean timeChoiceHours = true;
       private boolean jobTimeCompletionChecked = false;
@@ -669,6 +726,9 @@ public class VCRTSGUI {
       private JTextField dayBox;
       private JTextField yearBox;
 
+      /**
+       * Initializes the JobRequestListener object.
+       */
       public JobRequestListener() {
          titleBox = new JTextField();
          descriptionBox = new JTextArea();
@@ -725,9 +785,6 @@ public class VCRTSGUI {
             infoBoxMessage.setText("An error occurred. Please check inputs.");
             infoBox.setVisible(true);
          }
-      }
-
-      public void setDeadline(String string) {
       }
 
       @Override
@@ -807,18 +864,24 @@ public class VCRTSGUI {
          this.setTitle("");
          this.setDescription("");
          this.setDurationTime(0);
-         this.setDeadline("");
+         this.setDeadline(LocalDate.parse("2000-01-01"));
       }
    }
 
+   /**
+    * This class is used for when users  rent new vehicles to the Vehicular Clous System. It listens for events that take place 
+    * on the car rental page, such as the fields being filled out or the submit button being pressed.
+    */
    class CarRentalRequestListener extends Vehicle implements KeyListener, ActionListener, ItemListener, FieldClearer {
       private boolean monthsSelected = false;
-
       private JTextField makeBox;
       private JTextField modelBox;
       private JTextField plateNumberBox;
       private JTextField residencyBox;
 
+      /**
+       * Initializes the CarRentalRequestListener object.
+       */
       public CarRentalRequestListener() {
          makeBox = new JTextField();
          modelBox = new JTextField();
