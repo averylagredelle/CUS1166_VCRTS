@@ -1,16 +1,25 @@
+import java.awt.CardLayout;
+import java.awt.FlowLayout;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 public class Controller {
   private ArrayList<Vehicle> vehicles;
   private ArrayList<Job> jobs;
   private Server server;
   private int redundancyLevel;
-  //private boolean checkpoint;
-
 
   private int minutesFromStart;
   private HashMap<Job, Integer> completionTimes;
+
+  private JFrame frame = new JFrame();
+  private final int APP_WIDTH = 480;
+  private final int APP_HEIGHT = 600;
 
   public Controller() {
     jobs = new ArrayList<Job>();
@@ -20,6 +29,41 @@ public class Controller {
     //completed jobs output
     //completedJobsOutput into new file "completedjobs.txt"
     //throws FileNotFoundException
+
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.setLayout(new CardLayout());
+    frame.setTitle("Vehicular Cloud Real Time Controller");
+    frame.setSize(APP_WIDTH, APP_HEIGHT);
+    frame.setResizable(false);
+    frame.setLocation(600, 100);
+    
+    startApp();
+    frame.setVisible(true);
+  }
+
+  public static void main(String[] args) {
+    new Controller();
+  }
+
+  public void startApp() {
+    createIntroScreen();
+  }
+
+  public void createIntroScreen() {
+    JPanel introPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 100, 50));
+    JLabel title = new JLabel("Welcome to the Controller for the Vehicular Cloud Real Time System");
+    JTextArea description = new JTextArea("From this page, you are able to view jobs that have been submitted to the vehicular cloud system as well as their completion times.");
+
+    description.setLineWrap(true);
+    description.setWrapStyleWord(true);
+    description.setEditable(false);
+    description.setSize(APP_WIDTH - 50, APP_HEIGHT - 50);
+    description.setFocusable(false);
+    
+
+    introPanel.add(title);
+    introPanel.add(description);
+    frame.add(introPanel);
   }
 
   public void assignJob(Job j) {

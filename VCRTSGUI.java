@@ -116,13 +116,7 @@ public class VCRTSGUI {
       JLabel welcomeMessage = new JLabel("Welcome to this Vehicular Cloud Real Time System!");
       JTextArea explanation = new JTextArea("If you already have an account with us, select \"Login\" below. If this is your first time using this vehicular cloud system, click the \"Sign Up\" button.");
       JButton signUp = new JButton("Sign Up");
-      signUp.setBackground(buttonColor);
-      signUp.setBorderPainted(false);
-      signUp.setOpaque(true);
       JButton login = new JButton("Login");
-      login.setBackground(buttonColor);
-      login.setBorderPainted(false);
-      login.setOpaque(true);
 
       explanation.setEditable(false);
       explanation.setFocusable(false);
@@ -135,12 +129,18 @@ public class VCRTSGUI {
       pageSwitchButtons.add(login);
       login.setBackground(buttonColor);
       login.setForeground(textColor);
+      login.setBackground(buttonColor);
+      login.setBorderPainted(false);
+      login.setOpaque(true);
 
       signUp.setName(SIGNUP_PAGE_NAME);
       signUp.addActionListener(switcher);
       pageSwitchButtons.add(signUp);
       signUp.setBackground(buttonColor);
       signUp.setForeground(textColor);
+      signUp.setBackground(buttonColor);
+      signUp.setBorderPainted(false);
+      signUp.setOpaque(true);
 
       welcomePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 100, 50));
       welcomePanel.setBounds(0, 0, APP_WIDTH, APP_HEIGHT);
