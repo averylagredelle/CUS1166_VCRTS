@@ -10,6 +10,8 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.*;
+import java.net.Socket;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.awt.Color;
@@ -50,8 +52,12 @@ public class VCRTSGUI {
    private JobRequestListener jobRequestListener = new JobRequestListener();
    private CarRentalRequestListener rentalRequestListener = new CarRentalRequestListener();
    private User currentUser;
-   private Server database = new Server();
-   private Controller controller = new Controller();
+   private boolean currentUserIsNew;
+   //private Server database = new Server();
+   //private Controller controller = new Controller();
+   private static Socket socket;
+   private static DataInputStream inputStream;
+   private static DataOutputStream outputStream;
    private Color backgroundColor;
    private Color buttonColor;
    private Color textColor;
@@ -82,6 +88,15 @@ public class VCRTSGUI {
       backgroundColor = new Color(245, 195, 194);//background color
       buttonColor = new Color(124,131,188);//button color
       textColor = new Color(255,255,255);//text color
+
+      try {
+         socket = new Socket("localhost", 1000);
+         inputStream = new DataInputStream(socket.getInputStream());
+         outputStream = new DataOutputStream(socket.getOutputStream());
+      }
+      catch(IOException e) {
+         System.out.println("A connection error occurred");
+      }
 
       //start application creates screen output
       startApp(); 
@@ -635,13 +650,72 @@ public class VCRTSGUI {
          passwordBox = new JPasswordField();
       }
 
+      public boolean accountExists(String username) {
+         try {
+            outputStream.writeUTF("database isUser");
+            if(inputStream.readUTF().equals("send username"))
+               outputStream.writeUTF(username);
+            return inputStream.readBoolean();
+         }
+         catch(IOException e) {
+            System.out.println("An error occurred");
+            return false;
+         }
+      }
+
+      public boolean accountExists(String username, String password) {
+         try {
+            outputStream.writeUTF("database accountFound");
+            if(inputStream.readUTF().equals("send username")) {
+               outputStream.writeUTF(username);
+               if(inputStream.readUTF().equals("send password")) {
+                  outputStream.writeUTF(password);
+               }
+            }
+            return inputStream.readBoolean();
+         }
+         catch(IOException e) {
+            return false;
+         }
+      }
+
+      public boolean addUserToDatabase(String username, String password) {
+         try {
+            outputStream.writeUTF("database addUser");
+            if(inputStream.readUTF().equals("send username")) {
+               outputStream.writeUTF(username);
+               if(inputStream.readUTF().equals("send password")) {
+                  outputStream.writeUTF(password);
+               }
+            }
+            return inputStream.readBoolean();
+         }
+         catch(IOException e) {
+            return false;
+         }
+      }
+
+      public boolean recordNewLogin(String username) {
+         try {
+            outputStream.writeUTF("recordNewLogin");
+            if(inputStream.readUTF().equals("send username")) {
+               outputStream.writeUTF(username);
+            }
+            return inputStream.readBoolean();
+         }
+         catch(IOException e) {
+            System.out.println("An error occurred");
+            return false;
+         }
+      }
+
       @Override
       public void actionPerformed(ActionEvent e) {
          if(((JButton)e.getSource()).getText().equals("Sign Up")) {
-            if(!this.getUsername().equals("") && !this.getPassword().equals("") && !database.isUser(this.getUsername())) {
+            if(!this.getUsername().equals("") && !this.getPassword().equals("") && !accountExists(this.getUsername())) {
                currentUser = new User(this.getUsername(), this.getPassword());
-               database.addUser(currentUser);
-               database.updateDatabase("New Sign Up", currentUser);
+               currentUserIsNew = true;
+               addUserToDatabase(currentUser.getUsername(), currentUser.getPassword());
                clearFields();
                currentUserId.setText("     User ID: " + currentUser.getUsername());
                showMainPage();
@@ -653,9 +727,10 @@ public class VCRTSGUI {
             }
          }
          else if(((JButton)e.getSource()).getText().equals("Login")) {
-            if(database.accountFound(this.getUsername(), this.getPassword())) {
-               currentUser = database.getUser(this.getUsername());
-               database.updateDatabase("New Login", currentUser);
+            if(accountExists(this.getUsername(), this.getPassword())) {
+               currentUser = new User(this.getUsername(), this.getPassword());
+               currentUserIsNew = false;
+               recordNewLogin(currentUser.getUsername());
                clearFields();
                currentUserId.setText("     User ID: " + currentUser.getUsername());
                showMainPage();
@@ -751,28 +826,28 @@ public class VCRTSGUI {
             this.setDeadline(LocalDate.parse(deadline));
 
             Client thisClient;
-            if(database.isClient(currentUser.getUsername())) {
-               thisClient = database.getClient(currentUser.getUsername());
-            }
-            else {
-               thisClient = new Client(currentUser.getUsername(), currentUser.getPassword());
-            }
+            // if(database.isClient(currentUser.getUsername())) {
+            //    //thisClient = database.getClient(currentUser.getUsername());
+            // }
+            // else {
+            //    thisClient = new Client(currentUser.getUsername(), currentUser.getPassword());
+            // }
 
             Job newJob = new Job(this.getTitle(), this.getDescription(), this.getDurationTime(), this.getDeadline());
 
             if(((JButton)e.getSource()).getName().equals("Calculate Job Time")) {
                jobTimeCompletionChecked = true;
-               infoBoxMessage.setText("Completion Time: " + controller.calculateJobCompletionTime(newJob) + " minutes from app start");
+               //infoBoxMessage.setText("Completion Time: " + controller.calculateJobCompletionTime(newJob) + " minutes from app start");
                infoBox.setVisible(true);
             }
             else {
-               thisClient.submitJob(newJob, controller);
+               //thisClient.submitJob(newJob, controller);
 
-               if(!database.isClient(thisClient.getUsername())) {
-                  database.addClient(thisClient);
-               }
+               // if(!database.isClient(thisClient.getUsername())) {
+               //    //database.addClient(thisClient);
+               // }
 
-               database.updateDatabase("New Job Submitted", thisClient);
+               //database.updateDatabase("New Job Submitted", thisClient);
                clearFields();
                jobTimeCompletionChecked = false;
                System.out.println("Job submitted successfully");
@@ -901,21 +976,21 @@ public class VCRTSGUI {
 
             Owner thisOwner;
 
-            if(database.isOwner(currentUser.getUsername())) {
-               thisOwner = database.getOwner(currentUser.getUsername());
-            }
-            else {
-               thisOwner = new Owner(currentUser.getUsername(), currentUser.getPassword());
-            }
+            // if(database.isOwner(currentUser.getUsername())) {
+            //    //thisOwner = database.getOwner(currentUser.getUsername());
+            // }
+            // else {
+            //    thisOwner = new Owner(currentUser.getUsername(), currentUser.getPassword());
+            // }
 
             Vehicle newRental = new Vehicle(this.getMake(), this.getModel(), this.getLicensePlateNumber(), this.getResidency());
-            thisOwner.rentVehicle(newRental, controller);
+            //thisOwner.rentVehicle(newRental, controller);
 
-            if(!database.isOwner(thisOwner.getUsername())) {
-               database.addOwner(thisOwner);
-            }
+            // if(!database.isOwner(thisOwner.getUsername())) {
+            //    //database.addOwner(thisOwner);
+            // }
 
-            database.updateDatabase("New Rental Added", thisOwner);
+            //database.updateDatabase("New Rental Added", thisOwner);
             clearFields();
             System.out.println("Car Rented Successfully");
             infoBoxMessage.setText("Car rented successfully!");

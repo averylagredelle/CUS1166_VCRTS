@@ -1,5 +1,8 @@
 import java.awt.CardLayout;
 import java.awt.FlowLayout;
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -11,8 +14,14 @@ import javax.swing.JTextArea;
 public class Controller {
   private ArrayList<Vehicle> vehicles;
   private ArrayList<Job> jobs;
-  private Server server;
+  private Server database;
   private int redundancyLevel;
+
+  private static ServerSocket serverSocket;
+  private static Socket socket;
+  private static DataInputStream inputStream;
+  private static DataOutputStream outputStream;
+  private static boolean controllerConnectionOn = true;
 
   private int minutesFromStart;
   private HashMap<Job, Integer> completionTimes;
@@ -26,6 +35,7 @@ public class Controller {
     vehicles = new ArrayList<Vehicle>();
     minutesFromStart = 0;
     completionTimes = new HashMap<Job, Integer>();
+    database = new Server();
     //completed jobs output
     //completedJobsOutput into new file "completedjobs.txt"
     //throws FileNotFoundException
@@ -36,9 +46,31 @@ public class Controller {
     frame.setSize(APP_WIDTH, APP_HEIGHT);
     frame.setResizable(false);
     frame.setLocation(600, 100);
-    
+
     startApp();
     frame.setVisible(true);
+
+    try{
+      serverSocket = new ServerSocket(1000);
+      socket = serverSocket.accept();
+      inputStream = new DataInputStream(socket.getInputStream());
+      outputStream = new DataOutputStream(socket.getOutputStream());
+    }
+    catch(IOException e) {
+      System.out.println("An error occurred, could not connect");
+    }
+
+    String request = "";
+
+    while(controllerConnectionOn) {
+      try {
+        request = inputStream.readUTF();
+        parseRequest(request);
+      }
+      catch(IOException e) {
+        System.out.println("An error occurred while trying to read requests");
+      }
+    }
   }
 
   public static void main(String[] args) {
@@ -52,14 +84,12 @@ public class Controller {
   public void createIntroScreen() {
     JPanel introPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 100, 50));
     JLabel title = new JLabel("Welcome to the Controller for the Vehicular Cloud Real Time System");
-    JTextArea description = new JTextArea("From this page, you are able to view jobs that have been submitted to the vehicular cloud system as well as their completion times.");
+    JTextArea description = new JTextArea("From this page, you are able to view jobs that have been submitted to the vehicular                         cloud system as well as their completion times.");
 
     description.setLineWrap(true);
-    description.setWrapStyleWord(true);
     description.setEditable(false);
     description.setSize(APP_WIDTH - 50, APP_HEIGHT - 50);
-    description.setFocusable(false);
-    
+    description.setFocusable(false);    
 
     introPanel.add(title);
     introPanel.add(description);
@@ -103,6 +133,80 @@ public class Controller {
   public int calculateJobCompletionTime(Job j){
     return minutesFromStart + j.getDurationTime();
   }
+
+  public void parseRequest(String request) {
+    switch(request) {
+      case "database isUser": {
+        try {
+          outputStream.writeUTF("send username");
+          System.out.println("send username sent in output stream");
+          String username = "";
+          username = inputStream.readUTF();
+          System.out.println("username received from input stream");
+          outputStream.writeBoolean(database.isUser(username));
+          System.out.println("boolean sent in output stream");
+          break;
+        }
+        catch(IOException e) {
+          System.out.println("An IO error occurred with database.isUser()");
+          break;
+        }
+      }
+
+      case "database accountFound": {
+        try {
+          String username, password;
+          outputStream.writeUTF("send username");
+          username = inputStream.readUTF();
+          outputStream.writeUTF("send password");
+          password = inputStream.readUTF();
+          outputStream.writeBoolean(database.accountFound(username, password));
+          break;
+        }
+        catch(IOException e) {
+          System.out.println("An error occurred with database.accountFound()");
+          break;
+        }
+      }
+
+      case "database addUser": {
+        try {
+          String username, password;
+          outputStream.writeUTF("send username");
+          username = inputStream.readUTF();
+          outputStream.writeUTF("send password");
+          password = inputStream.readUTF();
+          User newUser = new User(username, password);
+          database.addUser(newUser);
+          database.updateDatabase("New Sign Up", newUser);
+          outputStream.writeBoolean(true);
+          break;
+        }
+        catch(IOException e) {
+          System.out.println("An error occurred with database.addUser()");
+          break;
+        }
+      }
+
+      case "recordNewLogin": {
+        try {
+          String username;
+          outputStream.writeUTF("send username");
+          username = inputStream.readUTF();
+          User user = database.getUser(username);
+          database.updateDatabase("New Login", user);
+          outputStream.writeBoolean(true);
+          break;
+        }
+        catch(IOException e) {
+          System.out.println("An error occurred with recordNewLogin()");
+          break;
+        }
+      }
+    }
+  }
+
+
 
 }
 
