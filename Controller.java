@@ -139,12 +139,12 @@ public class Controller {
       case "database isUser": {
         try {
           outputStream.writeUTF("send username");
-          System.out.println("send username sent in output stream");
+          //System.out.println("send username sent in output stream");
           String username = "";
           username = inputStream.readUTF();
-          System.out.println("username received from input stream");
+          //System.out.println("username received from input stream");
           outputStream.writeBoolean(database.isUser(username));
-          System.out.println("boolean sent in output stream");
+          //System.out.println("boolean sent in output stream");
           break;
         }
         catch(IOException e) {
@@ -156,10 +156,11 @@ public class Controller {
       case "database accountFound": {
         try {
           String username, password;
-          outputStream.writeUTF("send username");
-          username = inputStream.readUTF();
-          outputStream.writeUTF("send password");
-          password = inputStream.readUTF();
+          outputStream.writeUTF("send username and password");
+          String params = inputStream.readUTF();
+          String[] paramsList = params.split(",");
+          username = paramsList[0];
+          password = paramsList[1];
           outputStream.writeBoolean(database.accountFound(username, password));
           break;
         }

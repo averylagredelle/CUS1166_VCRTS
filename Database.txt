@@ -1,5 +1,2 @@
-New Sign Up|User ID: avery|Time: Sat Nov 11 23:19:35 EST 2023
-New Login|User ID: avery|Time: Sat Nov 11 23:19:42 EST 2023
-New Sign Up|User ID: matt|Time: Sat Nov 11 23:19:57 EST 2023
-New Login|User ID: matt|Time: Sat Nov 11 23:20:05 EST 2023
-New Login|User ID: avery|Time: Sat Nov 11 23:20:13 EST 2023
+New Sign Up|User ID: avery|Time: Mon Nov 13 19:15:38 EST 2023
+New Login|User ID: avery|Time: Mon Nov 13 19:15:44 EST 2023
