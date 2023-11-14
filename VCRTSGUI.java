@@ -868,19 +868,6 @@ public class VCRTSGUI {
          }
       }
 
-      public boolean userIsClient(String username){
-         try {
-            outputStream.writeUTF("database isClient");
-            if(inputStream.readUTF().equals("send username"))
-               outputStream.writeUTF(username);
-            return inputStream.readBoolean();
-         }
-         catch(IOException e) {
-            System.out.println("An error occurred");
-            return false;
-         }
-      }
-
       @Override
       public void keyTyped(KeyEvent e) {
          //Currently Unneeded

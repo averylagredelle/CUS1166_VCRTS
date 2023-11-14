@@ -3,6 +3,7 @@ import java.awt.FlowLayout;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -216,16 +217,32 @@ public class Controller {
             String[] paramsList = params.split(",");
             jobTitle = paramsList[0];
             jobDescription = paramsList[1];
-            jobDurationTime = Integer.valueOf(paramsList[2]);
+            jobDurationTime = Integer.parseInt(paramsList[2]);
             deadline = paramsList[3];
             username = paramsList[4];
 
+            Job job = new Job(jobTitle, jobDescription, jobDurationTime, LocalDate.parse(deadline));
+            Client c;
+
+            if(database.isClient(username)){
+               c = database.getClient(username);
+               c.submitJob(job,this);
+            }
+            else {
+              c = new Client(database.getUser(username).getUsername(),database.getUser(username).getPassword());
+              database.addClient(c);
+              c.submitJob(job,this);
+            }
+            database.updateDatabase("new job submitted", c);
 
             break;
           }
         catch(IOException e) {
-          System.out.println("An error occurred with recordNewLogin()");
+          System.out.println("An error occurred with recordsendJobRequest()");
           break;
+        } catch(NumberFormatException e) {
+            System.out.println("An error occurred with Integer.parseInt");
+            break;
         }
       }
     }
