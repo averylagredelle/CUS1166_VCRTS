@@ -208,17 +208,19 @@ public class Controller {
 
         case "sendJobRequest": {
           try {
-            String jobTitle;
-            String jobDescription;
-            int jobDurationTime;
-            String deadline;
-            String username;
+            String jobTitle, jobDescription, deadline, username;
+            int jobDurationTime = 0;
+
             outputStream.writeUTF("send job field");
-            jobTitle = inputStream.readUTF();
-            jobDescription = inputStream.readUTF();
-            jobDurationTime = Integer.valueOf(inputStream.readUTF());
-            deadline = inputStream.readUTF();
-            username = inputStream.readUTF();
+            String params = inputStream.readUTF();
+            String[] paramsList = params.split(",");
+            jobTitle = paramsList[0];
+            jobDescription = paramsList[1];
+            jobDurationTime = Integer.valueOf(paramsList[2]);
+            deadline = paramsList[3];
+            username = paramsList[4];
+
+
             break;
           }
         catch(IOException e) {
