@@ -3,6 +3,7 @@ import java.awt.FlowLayout;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -139,12 +140,12 @@ public class Controller {
       case "database isUser": {
         try {
           outputStream.writeUTF("send username");
-          System.out.println("send username sent in output stream");
+          //System.out.println("send username sent in output stream");
           String username = "";
           username = inputStream.readUTF();
-          System.out.println("username received from input stream");
+          //System.out.println("username received from input stream");
           outputStream.writeBoolean(database.isUser(username));
-          System.out.println("boolean sent in output stream");
+          //System.out.println("boolean sent in output stream");
           break;
         }
         catch(IOException e) {
@@ -156,10 +157,11 @@ public class Controller {
       case "database accountFound": {
         try {
           String username, password;
-          outputStream.writeUTF("send username");
-          username = inputStream.readUTF();
-          outputStream.writeUTF("send password");
-          password = inputStream.readUTF();
+          outputStream.writeUTF("send username and password");
+          String params = inputStream.readUTF();
+          String[] paramsList = params.split(",");
+          username = paramsList[0];
+          password = paramsList[1];
           outputStream.writeBoolean(database.accountFound(username, password));
           break;
         }
@@ -172,10 +174,11 @@ public class Controller {
       case "database addUser": {
         try {
           String username, password;
-          outputStream.writeUTF("send username");
-          username = inputStream.readUTF();
-          outputStream.writeUTF("send password");
-          password = inputStream.readUTF();
+          outputStream.writeUTF("send username and password");
+          String params = inputStream.readUTF();
+          String[] paramsList = params.split(",");
+          username = paramsList[0];
+          password = paramsList[1];
           User newUser = new User(username, password);
           database.addUser(newUser);
           database.updateDatabase("New Sign Up", newUser);
@@ -203,10 +206,72 @@ public class Controller {
           break;
         }
       }
+
+      case "database sendJobRequest": {
+        try {
+          String jobTitle, jobDescription, deadline, username;
+          int jobDurationTime = 0;
+
+          outputStream.writeUTF("send job fields");
+          String params = inputStream.readUTF();
+          String[] paramsList = params.split(",");
+          jobTitle = paramsList[0];
+          jobDescription = paramsList[1];
+          jobDurationTime = Integer.parseInt(paramsList[2]);
+          deadline = paramsList[3];
+          username = paramsList[4];
+
+          Job job = new Job(jobTitle, jobDescription, jobDurationTime, LocalDate.parse(deadline));
+          Client c;
+
+          if(database.isClient(username)){
+            c = database.getClient(username);
+            c.submitJob(job,this);
+          }
+          else {
+            c = new Client(database.getUser(username).getUsername(),database.getUser(username).getPassword());
+            database.addClient(c);
+            c.submitJob(job,this);
+          }
+          database.updateDatabase("New Job Submitted", c);
+
+          break;
+        }
+        catch(IOException e) {
+          System.out.println("An error occurred with recordsendJobRequest()");
+          break;
+        } catch(NumberFormatException e) {
+          System.out.println("An error occurred with Integer.parseInt");
+          break;
+        }
+      }
+
+      case "controller calculateJobCompletionTime": {
+        try {
+          String title, description;
+          int durationTime = -1;
+          LocalDate deadline;
+
+          outputStream.writeUTF("send job params");
+          String params = inputStream.readUTF();
+          String[] paramsList = params.split(",");
+
+          title = paramsList[0];
+          description = paramsList[1];
+          durationTime = Integer.parseInt(paramsList[2]);
+          deadline = LocalDate.parse(paramsList[3]);
+
+          outputStream.writeInt(calculateJobCompletionTime(new Job(title, description, durationTime, deadline)));
+        }
+        catch(IOException e) {
+          System.out.println("An IO exception occurred while trying to calculate job completion time");
+        }
+        catch(NumberFormatException n) {
+          System.out.println("A number format exception occurred while trying to calculate job completion time");
+        }
+      }
     }
   }
-
-
-
 }
+
 

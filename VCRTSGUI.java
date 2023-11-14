@@ -53,8 +53,6 @@ public class VCRTSGUI {
    private CarRentalRequestListener rentalRequestListener = new CarRentalRequestListener();
    private User currentUser;
    private boolean currentUserIsNew;
-   //private Server database = new Server();
-   //private Controller controller = new Controller();
    private static Socket socket;
    private static DataInputStream inputStream;
    private static DataOutputStream outputStream;
@@ -666,11 +664,8 @@ public class VCRTSGUI {
       public boolean accountExists(String username, String password) {
          try {
             outputStream.writeUTF("database accountFound");
-            if(inputStream.readUTF().equals("send username")) {
-               outputStream.writeUTF(username);
-               if(inputStream.readUTF().equals("send password")) {
-                  outputStream.writeUTF(password);
-               }
+            if(inputStream.readUTF().equals("send username and password")) {
+               outputStream.writeUTF(username + "," + password);
             }
             return inputStream.readBoolean();
          }
@@ -682,11 +677,8 @@ public class VCRTSGUI {
       public boolean addUserToDatabase(String username, String password) {
          try {
             outputStream.writeUTF("database addUser");
-            if(inputStream.readUTF().equals("send username")) {
-               outputStream.writeUTF(username);
-               if(inputStream.readUTF().equals("send password")) {
-                  outputStream.writeUTF(password);
-               }
+            if(inputStream.readUTF().equals("send username and password")) {
+               outputStream.writeUTF(username + "," + password);
             }
             return inputStream.readBoolean();
          }
@@ -825,29 +817,13 @@ public class VCRTSGUI {
             String deadline = year + "-" + month + "-" + day;
             this.setDeadline(LocalDate.parse(deadline));
 
-            Client thisClient;
-            // if(database.isClient(currentUser.getUsername())) {
-            //    //thisClient = database.getClient(currentUser.getUsername());
-            // }
-            // else {
-            //    thisClient = new Client(currentUser.getUsername(), currentUser.getPassword());
-            // }
-
-            Job newJob = new Job(this.getTitle(), this.getDescription(), this.getDurationTime(), this.getDeadline());
-
             if(((JButton)e.getSource()).getName().equals("Calculate Job Time")) {
                jobTimeCompletionChecked = true;
-               //infoBoxMessage.setText("Completion Time: " + controller.calculateJobCompletionTime(newJob) + " minutes from app start");
+               infoBoxMessage.setText("Completion Time: " + getJobCompletionTime(new Job(this.getTitle(), this.getDescription(), this.getDurationTime(), this.getDeadline())) + " minutes from app start");
                infoBox.setVisible(true);
             }
             else {
-               //thisClient.submitJob(newJob, controller);
-
-               // if(!database.isClient(thisClient.getUsername())) {
-               //    //database.addClient(thisClient);
-               // }
-
-               //database.updateDatabase("New Job Submitted", thisClient);
+               sendJobRequest(this.getTitle(), this.getDescription(), this.getDurationTime(), this.getDeadline().toString(), currentUser.getUsername());
                clearFields();
                jobTimeCompletionChecked = false;
                System.out.println("Job submitted successfully");
@@ -859,6 +835,30 @@ public class VCRTSGUI {
             System.out.println("An error occurred. Please ensure you filled out all of the text boxes correctly.");
             infoBoxMessage.setText("An error occurred. Please check inputs.");
             infoBox.setVisible(true);
+         }
+      }
+
+      public void sendJobRequest(String jobTitle, String jobDescription, int jobDurationTime, String deadline, String username){
+         try {
+            outputStream.writeUTF("database sendJobRequest");
+            if(inputStream.readUTF().equals("send job fields")){
+               outputStream.writeUTF(jobTitle + "," + jobDescription + "," + jobDurationTime + "," + deadline + "," + username);
+            }
+         } catch (IOException e) {
+            System.out.println("An error occurred while trying to send job request");
+         }
+      }
+
+      public int getJobCompletionTime(Job j) {
+         try {
+            outputStream.writeUTF("controller calculateJobCompletionTime");
+            if(inputStream.readUTF().equals("send job params")) {
+               outputStream.writeUTF(j.getTitle() + "," + j.getDescription() + "," + j.getDurationTime() + "," + j.getDeadline());
+            }
+            return inputStream.readInt();
+         } catch(IOException e) {
+            System.out.println("An error occurred while getting job completion time");
+            return -1;
          }
       }
 
