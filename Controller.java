@@ -190,7 +190,7 @@ public class Controller {
           break;
         }
       }
-
+    
       case "recordNewLogin": {
         try {
           String username;
@@ -270,6 +270,51 @@ public class Controller {
           System.out.println("A number format exception occurred while trying to calculate job completion time");
         }
       }
+        case "database sendrentalRequest": {
+        try {
+          String make, model, licensePlateNumber, username;
+          int residency = 0;
+          int jobDurationTime = 0;
+          outputStream.writeUTF("send vehicles fields");
+          String params = inputStream.readUTF();
+          String[] paramsList = params.split(",");
+
+          make = paramsList[0];
+          model = paramsList[1];
+          licensePlateNumber = paramsList[2];
+          residency = Integer.parseInt(paramsList[3]);
+          username = paramsList[4];
+         
+          Vehicle vehicle = new Vehicle(make, model, licensePlateNumber, residency);
+          Owner o;
+          
+          if(database.isOwner(username)){
+            o = database.getOwner(username);
+            o.rentVehicle(vehicle,this);
+          }
+          else {
+            o = new Owner(database.getUser(username).getUsername(),database.getUser(username).getPassword());
+            database.addOwner(o);
+            o.rentVehicle(vehicle,this);
+          }
+          database.updateDatabase("New Vehice Rented", o);
+
+          break;
+        }
+        catch(IOException e) {
+          System.out.println("An error occurred with recordsendJobRequest()");
+          break;
+        } catch(NumberFormatException e) {
+          System.out.println("An error occurred with Integer.parseInt");
+          break;
+        }
+      }
+
+
+
+        }
+      }
+
     }
   }
 }
