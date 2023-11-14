@@ -205,7 +205,29 @@ public class Controller {
           break;
         }
       }
+
+        case "sendJobRequest": {
+          try {
+            String jobTitle;
+            String jobDescription;
+            int jobDurationTime;
+            String deadline;
+            String username;
+            outputStream.writeUTF("send job field");
+            jobTitle = inputStream.readUTF();
+            jobDescription = inputStream.readUTF();
+            jobDurationTime = Integer.valueOf(inputStream.readUTF());
+            deadline = inputStream.readUTF();
+            username = inputStream.readUTF();
+            break;
+          }
+        catch(IOException e) {
+          System.out.println("An error occurred with recordNewLogin()");
+          break;
+        }
+      }
+    }
     }
   }
-}
+
 
