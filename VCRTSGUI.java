@@ -856,6 +856,18 @@ public class VCRTSGUI {
          }
       }
 
+      public boolean sendJobRequest(String jobTitle, String jobDescription, int jobDurationTime, String deadline, String username){
+         try{
+            outputStream.writeUTF("database sendJobRequest");
+            if(inputStream.readUTF().equals("send job fields")){
+               outputStream.writeUTF(jobTitle + "," + jobDescription + "," + jobDurationTime + "," + deadline + "," + username);
+            }
+            return inputStream.readBoolean();
+         } catch (IOException e) {
+            return false;
+         }
+      }
+
       @Override
       public void keyTyped(KeyEvent e) {
          //Currently Unneeded
