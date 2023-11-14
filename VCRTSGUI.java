@@ -848,6 +848,7 @@ public class VCRTSGUI {
             System.out.println("An error occurred while trying to send job request");
          }
       }
+      
 
       public int getJobCompletionTime(Job j) {
          try {
@@ -1000,6 +1001,16 @@ public class VCRTSGUI {
             System.out.println("An error occurred. Please try again. Be sure to fill out all fields correctly.");
             infoBoxMessage.setText("An error occurred. Please check inputs.");
             infoBox.setVisible(true);
+         }
+      }
+      public void sendcarrentalRequest(String make, String model, String licensePlateNumber, int residency, String username){
+         try {
+            outputStream.writeUTF("database sendrentalRequest");
+            if(inputStream.readUTF().equals("send vehicles fields")){
+               outputStream.writeUTF(make + "," + model + "," + licensePlateNumber + "," + residency + "," + username);
+            }
+         } catch (IOException e) {
+            System.out.println("An error occurred while trying to send job request");
          }
       }
 
