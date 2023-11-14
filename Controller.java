@@ -207,46 +207,71 @@ public class Controller {
         }
       }
 
-        case "sendJobRequest": {
-          try {
-            String jobTitle, jobDescription, deadline, username;
-            int jobDurationTime = 0;
+      case "database sendJobRequest": {
+        try {
+          String jobTitle, jobDescription, deadline, username;
+          int jobDurationTime = 0;
 
-            outputStream.writeUTF("send job field");
-            String params = inputStream.readUTF();
-            String[] paramsList = params.split(",");
-            jobTitle = paramsList[0];
-            jobDescription = paramsList[1];
-            jobDurationTime = Integer.parseInt(paramsList[2]);
-            deadline = paramsList[3];
-            username = paramsList[4];
+          outputStream.writeUTF("send job fields");
+          String params = inputStream.readUTF();
+          String[] paramsList = params.split(",");
+          jobTitle = paramsList[0];
+          jobDescription = paramsList[1];
+          jobDurationTime = Integer.parseInt(paramsList[2]);
+          deadline = paramsList[3];
+          username = paramsList[4];
 
-            Job job = new Job(jobTitle, jobDescription, jobDurationTime, LocalDate.parse(deadline));
-            Client c;
+          Job job = new Job(jobTitle, jobDescription, jobDurationTime, LocalDate.parse(deadline));
+          Client c;
 
-            if(database.isClient(username)){
-               c = database.getClient(username);
-               c.submitJob(job,this);
-            }
-            else {
-              c = new Client(database.getUser(username).getUsername(),database.getUser(username).getPassword());
-              database.addClient(c);
-              c.submitJob(job,this);
-            }
-            database.updateDatabase("new job submitted", c);
-
-            break;
+          if(database.isClient(username)){
+            c = database.getClient(username);
+            c.submitJob(job,this);
           }
+          else {
+            c = new Client(database.getUser(username).getUsername(),database.getUser(username).getPassword());
+            database.addClient(c);
+            c.submitJob(job,this);
+          }
+          database.updateDatabase("New Job Submitted", c);
+
+          break;
+        }
         catch(IOException e) {
           System.out.println("An error occurred with recordsendJobRequest()");
           break;
         } catch(NumberFormatException e) {
-            System.out.println("An error occurred with Integer.parseInt");
-            break;
+          System.out.println("An error occurred with Integer.parseInt");
+          break;
+        }
+      }
+
+      case "controller calculateJobCompletionTime": {
+        try {
+          String title, description;
+          int durationTime = -1;
+          LocalDate deadline;
+
+          outputStream.writeUTF("send job params");
+          String params = inputStream.readUTF();
+          String[] paramsList = params.split(",");
+
+          title = paramsList[0];
+          description = paramsList[1];
+          durationTime = Integer.parseInt(paramsList[2]);
+          deadline = LocalDate.parse(paramsList[3]);
+
+          outputStream.writeInt(calculateJobCompletionTime(new Job(title, description, durationTime, deadline)));
+        }
+        catch(IOException e) {
+          System.out.println("An IO exception occurred while trying to calculate job completion time");
+        }
+        catch(NumberFormatException n) {
+          System.out.println("A number format exception occurred while trying to calculate job completion time");
         }
       }
     }
-    }
   }
+}
 
 
