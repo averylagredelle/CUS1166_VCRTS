@@ -1,4 +1,0 @@
-New Sign Up|User ID: avery|Time: Mon Nov 13 21:57:24 EST 2023
-New Job Submitted|Client ID: avery|Title: test|Description: this is a test|Duration Time: 60 minutes |Deadline: 2023-12-01|Time: Mon Nov 13 21:57:45 EST 2023
-New Job Submitted|Client ID: avery|Title: test|Description: this is a test|Duration Time: 60 minutes |Deadline: 2023-12-01|Title: test2|Description: this is also a test|Duration Time: 30 minutes |Deadline: 2023-12-27|Time: Mon Nov 13 21:58:08 EST 2023
-New Job Submitted|Client ID: avery|Title: test|Description: this is a test|Duration Time: 60 minutes |Deadline: 2023-12-01|Title: test2|Description: this is also a test|Duration Time: 30 minutes |Deadline: 2023-12-27|Title: test 3|Description: this is the third test|Duration Time: 15 minutes |Deadline: 2024-10-29|Time: Mon Nov 13 21:59:16 EST 2023

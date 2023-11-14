@@ -16,7 +16,7 @@ public class Controller {
   private ArrayList<Vehicle> vehicles;
   private ArrayList<Job> jobs;
   private Server database;
-  private int redundancyLevel;
+  //private int redundancyLevel;
 
   private static ServerSocket serverSocket;
   private static Socket socket;
@@ -270,12 +270,11 @@ public class Controller {
           System.out.println("A number format exception occurred while trying to calculate job completion time");
         }
       }
-        case "database sendrentalRequest": {
+        case "database sendRentalRequest": {
         try {
           String make, model, licensePlateNumber, username;
           int residency = 0;
-          int jobDurationTime = 0;
-          outputStream.writeUTF("send vehicles fields");
+          outputStream.writeUTF("send vehicle fields");
           String params = inputStream.readUTF();
           String[] paramsList = params.split(",");
 
@@ -298,7 +297,6 @@ public class Controller {
             o.rentVehicle(vehicle,this);
           }
           database.updateDatabase("New Vehice Rented", o);
-
           break;
         }
         catch(IOException e) {
@@ -308,15 +306,10 @@ public class Controller {
           System.out.println("An error occurred with Integer.parseInt");
           break;
         }
-      }
-
-
-
-        }
-      }
-
+      }         
     }
   }
 }
+
 
 

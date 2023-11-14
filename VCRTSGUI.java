@@ -50,9 +50,8 @@ public class VCRTSGUI {
    private PageSwitcher switcher = new PageSwitcher();
    private UserVerifier verifier = new UserVerifier();
    private JobRequestListener jobRequestListener = new JobRequestListener();
-   private CarRentalRequestListener rentalRequestListener = new CarRentalRequestListener();
+   private VehicleRentalRequestListener rentalRequestListener = new VehicleRentalRequestListener();
    private User currentUser;
-   private boolean currentUserIsNew;
    private static Socket socket;
    private static DataInputStream inputStream;
    private static DataOutputStream outputStream;
@@ -706,7 +705,6 @@ public class VCRTSGUI {
          if(((JButton)e.getSource()).getText().equals("Sign Up")) {
             if(!this.getUsername().equals("") && !this.getPassword().equals("") && !accountExists(this.getUsername())) {
                currentUser = new User(this.getUsername(), this.getPassword());
-               currentUserIsNew = true;
                addUserToDatabase(currentUser.getUsername(), currentUser.getPassword());
                clearFields();
                currentUserId.setText("     User ID: " + currentUser.getUsername());
@@ -721,7 +719,6 @@ public class VCRTSGUI {
          else if(((JButton)e.getSource()).getText().equals("Login")) {
             if(accountExists(this.getUsername(), this.getPassword())) {
                currentUser = new User(this.getUsername(), this.getPassword());
-               currentUserIsNew = false;
                recordNewLogin(currentUser.getUsername());
                clearFields();
                currentUserId.setText("     User ID: " + currentUser.getUsername());
@@ -948,7 +945,7 @@ public class VCRTSGUI {
     * This class is used for when users  rent new vehicles to the Vehicular Clous System. It listens for events that take place 
     * on the car rental page, such as the fields being filled out or the submit button being pressed.
     */
-   class CarRentalRequestListener extends Vehicle implements KeyListener, ActionListener, ItemListener, FieldClearer {
+   class VehicleRentalRequestListener extends Vehicle implements KeyListener, ActionListener, ItemListener, FieldClearer {
       private boolean monthsSelected = false;
       private JTextField makeBox;
       private JTextField modelBox;
@@ -956,9 +953,9 @@ public class VCRTSGUI {
       private JTextField residencyBox;
 
       /**
-       * Initializes the CarRentalRequestListener object.
+       * Initializes the VehicleRentalRequestListener object.
        */
-      public CarRentalRequestListener() {
+      public VehicleRentalRequestListener() {
          makeBox = new JTextField();
          modelBox = new JTextField();
          plateNumberBox = new JTextField();
@@ -974,24 +971,7 @@ public class VCRTSGUI {
 
          if(!this.getMake().equals("") && !this.getModel().equals("") && 
          !this.getLicensePlateNumber().equals("") && this.getResidency() > 0) {
-
-            Owner thisOwner;
-
-            // if(database.isOwner(currentUser.getUsername())) {
-            //    //thisOwner = database.getOwner(currentUser.getUsername());
-            // }
-            // else {
-            //    thisOwner = new Owner(currentUser.getUsername(), currentUser.getPassword());
-            // }
-
-            Vehicle newRental = new Vehicle(this.getMake(), this.getModel(), this.getLicensePlateNumber(), this.getResidency());
-            //thisOwner.rentVehicle(newRental, controller);
-
-            // if(!database.isOwner(thisOwner.getUsername())) {
-            //    //database.addOwner(thisOwner);
-            // }
-
-            //database.updateDatabase("New Rental Added", thisOwner);
+            sendVehicleRentalRequest(this.getMake(), this.getModel(), this.getLicensePlateNumber(), this.getResidency(), currentUser.getUsername());
             clearFields();
             System.out.println("Car Rented Successfully");
             infoBoxMessage.setText("Car rented successfully!");
@@ -1003,10 +983,10 @@ public class VCRTSGUI {
             infoBox.setVisible(true);
          }
       }
-      public void sendcarrentalRequest(String make, String model, String licensePlateNumber, int residency, String username){
+      public void sendVehicleRentalRequest(String make, String model, String licensePlateNumber, int residency, String username){
          try {
-            outputStream.writeUTF("database sendrentalRequest");
-            if(inputStream.readUTF().equals("send vehicles fields")){
+            outputStream.writeUTF("database sendRentalRequest");
+            if(inputStream.readUTF().equals("send vehicle fields")){
                outputStream.writeUTF(make + "," + model + "," + licensePlateNumber + "," + residency + "," + username);
             }
          } catch (IOException e) {
