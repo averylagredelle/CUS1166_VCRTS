@@ -860,7 +860,7 @@ public class VCRTSGUI {
          try{
             outputStream.writeUTF("database sendJobRequest");
             if(inputStream.readUTF().equals("send job fields")){
-               outputStream.writeUTF(jobTitle + "," + jobDescription + "," + jobDurationTime + "," + deadline + "," + username);
+               outputStream.writeUTF(jobTitle + "," + jobDescription + "," + String.valueOf(jobDurationTime) + "," + deadline + "," + username);
             }
             return inputStream.readBoolean();
          } catch (IOException e) {
