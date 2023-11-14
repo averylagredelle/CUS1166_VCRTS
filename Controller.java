@@ -1,4 +1,6 @@
+import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.io.*;
 import java.net.ServerSocket;
@@ -7,9 +9,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 public class Controller {
@@ -28,8 +32,10 @@ public class Controller {
   private HashMap<Job, Integer> completionTimes;
 
   private JFrame frame = new JFrame();
+  private JPanel jobsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
   private final int APP_WIDTH = 480;
   private final int APP_HEIGHT = 600;
+  private String[] pages;
 
   public Controller() {
     jobs = new ArrayList<Job>();
@@ -80,21 +86,81 @@ public class Controller {
 
   public void startApp() {
     createIntroScreen();
+    createJobsListScreen();
   }
 
   public void createIntroScreen() {
-    JPanel introPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 100, 50));
+    JPanel mainPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    JPanel textPanel = new JPanel(new BorderLayout(0, 50));
+    JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
     JLabel title = new JLabel("Welcome to the Controller for the Vehicular Cloud Real Time System");
-    JTextArea description = new JTextArea("From this page, you are able to view jobs that have been submitted to the vehicular                         cloud system as well as their completion times.");
+    JPanel descriptionPanel = new JPanel(new BorderLayout());
+    JTextArea description = new JTextArea("On this page, you are able to view jobs that have been submitted to the vehicular cloud system with their completion times. You can also see how many vehicles are currently in the VC System. To begin, press \"Show Jobs\" or \"Show Vehicles\" below.");
+    JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 100, 50));
+    JButton showJobs = new JButton("Show Jobs");
+    JButton showVehicles = new JButton("Show Vehicles");
+
+    titlePanel.add(title);
 
     description.setLineWrap(true);
+    description.setWrapStyleWord(true);
     description.setEditable(false);
-    description.setSize(APP_WIDTH - 50, APP_HEIGHT - 50);
-    description.setFocusable(false);    
+    description.setMinimumSize(new Dimension(APP_WIDTH - 50, 200));
+    description.setFocusable(false);
 
-    introPanel.add(title);
-    introPanel.add(description);
-    frame.add(introPanel);
+    descriptionPanel.setSize(APP_WIDTH, 100);
+    descriptionPanel.add(description);
+
+    textPanel.add(titlePanel, BorderLayout.NORTH);
+    textPanel.add(descriptionPanel, BorderLayout.CENTER);
+
+    buttonPanel.add(showJobs);
+    buttonPanel.add(showVehicles);
+
+    showJobs.addActionListener(e -> {
+      ((CardLayout)frame.getContentPane().getLayout()).show(frame.getContentPane(), "Job List Screen");
+    });
+
+    mainPanel.add(textPanel);
+    mainPanel.add(buttonPanel);
+    frame.add(mainPanel, "Intro Screen");
+  }
+
+  public void createJobsListScreen() {
+    JPanel mainPanel = new JPanel(new BorderLayout());
+    JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    JLabel title = new JLabel("Current Jobs Requested From Users");
+    JScrollPane jobContainer;
+    JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 100, 50));
+    JButton showJobs = new JButton("Show Jobs");
+    JButton showVehicles = new JButton("Show Vehicles");
+
+    titlePanel.add(title);
+
+    jobContainer = new JScrollPane(jobsPanel);
+    jobContainer.setBorder(null);
+
+    buttonPanel.add(showJobs);
+    buttonPanel.add(showVehicles);
+
+    mainPanel.add(titlePanel, BorderLayout.NORTH);
+    mainPanel.add(jobContainer, BorderLayout.CENTER);
+    mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+    frame.add(mainPanel, "Job List Screen");
+  }
+
+  public void updateJobsPanel() {
+    jobsPanel.removeAll();
+    for(int i = 0; i < this.jobs.size(); i++) {
+      jobsPanel.add(new JLabel("............................................................................................................................................."));
+      jobsPanel.add(new JLabel("                                                                             Job " + String.valueOf(i + 1) + ": " + this.jobs.get(i).getTitle() + "                                                                            "));
+      jobsPanel.add(new JLabel("                                                                             Description: " + this.jobs.get(i).getDescription() + "                                                                            "));
+      jobsPanel.add(new JLabel("                                                                             Duration Time: " + this.jobs.get(i).getDurationTime() + " minutes                                                                           "));
+      jobsPanel.add(new JLabel("                                                                             Deadline: " + this.jobs.get(i).getDeadline() + "                                                                            "));
+      jobsPanel.add(new JLabel("                                                                             Owner: " + this.jobs.get(i).getJobOwner().getUsername() + "                                                                            "));
+      jobsPanel.add(new JLabel("                                                                             Time Completed: " + completionTimes.get(this.jobs.get(i)) + "                                                                            "));
+    }
+    frame.validate();
   }
 
   public void assignJob(Job j) {
@@ -226,14 +292,17 @@ public class Controller {
 
           if(database.isClient(username)){
             c = database.getClient(username);
+            job.setJobOwner(c);
             c.submitJob(job,this);
           }
           else {
             c = new Client(database.getUser(username).getUsername(),database.getUser(username).getPassword());
+            job.setJobOwner(c);
             database.addClient(c);
             c.submitJob(job,this);
           }
           database.updateDatabase("New Job Submitted", c);
+          updateJobsPanel();
 
           break;
         }

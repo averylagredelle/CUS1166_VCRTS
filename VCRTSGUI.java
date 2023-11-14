@@ -403,6 +403,8 @@ public class VCRTSGUI {
       jobTitleSubPanel.add(jobTitle);
 
       jobDescription.setName("Job Description");
+      jobDescription.setWrapStyleWord(true);
+      jobDescription.setLineWrap(true);
       jobDescription.addKeyListener(jobRequestListener);
       
       jobDescriptionSubPanel.setLayout(new BorderLayout());
