@@ -173,10 +173,11 @@ public class Controller {
       case "database addUser": {
         try {
           String username, password;
-          outputStream.writeUTF("send username");
-          username = inputStream.readUTF();
-          outputStream.writeUTF("send password");
-          password = inputStream.readUTF();
+          outputStream.writeUTF("send username and password");
+          String params = inputStream.readUTF();
+          String[] paramsList = params.split(",");
+          username = paramsList[0];
+          password = paramsList[1];
           User newUser = new User(username, password);
           database.addUser(newUser);
           database.updateDatabase("New Sign Up", newUser);
@@ -206,8 +207,5 @@ public class Controller {
       }
     }
   }
-
-
-
 }
 

@@ -679,11 +679,8 @@ public class VCRTSGUI {
       public boolean addUserToDatabase(String username, String password) {
          try {
             outputStream.writeUTF("database addUser");
-            if(inputStream.readUTF().equals("send username")) {
-               outputStream.writeUTF(username);
-               if(inputStream.readUTF().equals("send password")) {
-                  outputStream.writeUTF(password);
-               }
+            if(inputStream.readUTF().equals("send username and password")) {
+               outputStream.writeUTF(username + "," + password);
             }
             return inputStream.readBoolean();
          }
