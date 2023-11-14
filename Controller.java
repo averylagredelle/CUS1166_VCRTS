@@ -297,7 +297,7 @@ public class Controller {
             database.addOwner(o);
             o.rentVehicle(vehicle,this);
           }
-          database.updateDatabase("New Vehice Rented", o);
+          database.updateDatabase("New Vehice Rented", o); 
 
           break;
         }
