@@ -69,7 +69,7 @@ public class VCRTSGUI {
       frame.setTitle("Vehicular Cloud Real Time System");
       frame.setSize(APP_WIDTH, APP_HEIGHT);
       frame.setResizable(false);
-      frame.setLocation(600, 100);
+      frame.setLocation(250, 100);
       frame.getContentPane().setBackground(Color.BLUE);
 
       infoBoxMessage.setHorizontalAlignment(JLabel.CENTER);
@@ -78,7 +78,7 @@ public class VCRTSGUI {
       infoBox.setLayout(new BorderLayout());
       infoBox.setSize(300, 200);
       infoBox.setResizable(false);
-      infoBox.setLocationRelativeTo(frame);
+      infoBox.setLocation(300, 175);
       infoBox.setModalityType(ModalityType.APPLICATION_MODAL);
       infoBox.add(infoBoxMessage, BorderLayout.CENTER);
 
@@ -781,6 +781,7 @@ public class VCRTSGUI {
    class JobRequestListener extends Job implements KeyListener, ActionListener, ItemListener, FieldClearer {
       private boolean timeChoiceHours = true;
       private boolean jobTimeCompletionChecked = false;
+      private boolean attemptedSubmit = false;
       private String month = "";
       private String day = "";
       private String year = "";
@@ -806,13 +807,14 @@ public class VCRTSGUI {
 
       @Override
       public void actionPerformed(ActionEvent e) {
-         
-         if(timeChoiceHours && !jobTimeCompletionChecked)
-            this.setDurationTime(this.getDurationTime() * 60);
 
          if(!this.getTitle().equals("") && !this.getDescription().equals("") && this.getDurationTime() > 0 && 
          !month.equals("") && !day.equals("") && !year.equals("")) {
             
+            if(timeChoiceHours && !jobTimeCompletionChecked && !attemptedSubmit) {
+               this.setDurationTime(this.getDurationTime() * 60); 
+            }
+
             String deadline = year + "-" + month + "-" + day;
             this.setDeadline(LocalDate.parse(deadline));
 
@@ -822,29 +824,35 @@ public class VCRTSGUI {
                infoBox.setVisible(true);
             }
             else {
-               sendJobRequest(this.getTitle(), this.getDescription(), this.getDurationTime(), this.getDeadline().toString(), currentUser.getUsername());
-               clearFields();
                jobTimeCompletionChecked = false;
-               System.out.println("Job submitted successfully");
-               infoBoxMessage.setText("Job submitted successfully!");
-               infoBox.setVisible(true);
+               if(sendJobRequest(this.getTitle(), this.getDescription(), this.getDurationTime(), this.getDeadline().toString(), currentUser.getUsername())) {
+                  clearFields();
+                  infoBoxMessage.setText("Job submitted successfully!");
+                  infoBox.setVisible(true);
+               }
+               else {
+                  attemptedSubmit = true;
+                  infoBoxMessage.setText("Job was rejected by VC Controller.");
+                  infoBox.setVisible(true);
+               }
             }
          }
          else {
-            System.out.println("An error occurred. Please ensure you filled out all of the text boxes correctly.");
             infoBoxMessage.setText("An error occurred. Please check inputs.");
             infoBox.setVisible(true);
          }
       }
 
-      public void sendJobRequest(String jobTitle, String jobDescription, int jobDurationTime, String deadline, String username){
+      public boolean sendJobRequest(String jobTitle, String jobDescription, int jobDurationTime, String deadline, String username){
          try {
             outputStream.writeUTF("database sendJobRequest");
             if(inputStream.readUTF().equals("send job fields")){
                outputStream.writeUTF(jobTitle + "," + jobDescription + "," + jobDurationTime + "," + deadline + "," + username);
             }
+            return inputStream.readBoolean();
          } catch (IOException e) {
             System.out.println("An error occurred while trying to send job request");
+            return false;
          }
       }
       
@@ -892,6 +900,7 @@ public class VCRTSGUI {
                   }
                   case "Job Duration Time": {
                      durationTimeBox = (JTextField)e.getSource();
+                     attemptedSubmit = false;
                      try {
                         int time = Integer.parseInt(((JTextField)e.getSource()).getText());
                         this.setDurationTime(time);
@@ -935,11 +944,16 @@ public class VCRTSGUI {
          monthBox.setText("");
          dayBox.setText("");
          yearBox.setText("");
+         month = "";
+         day = "";
+         year = "";
 
          this.setTitle("");
          this.setDescription("");
          this.setDurationTime(0);
          this.setDeadline(LocalDate.parse("2000-01-01"));
+         attemptedSubmit = false;
+         System.out.println("Fields cleared");
       }
    }
 
@@ -949,6 +963,7 @@ public class VCRTSGUI {
     */
    class VehicleRentalRequestListener extends Vehicle implements KeyListener, ActionListener, ItemListener, FieldClearer {
       private boolean monthsSelected = false;
+      private boolean rentalAttempted = false;
       private JTextField makeBox;
       private JTextField modelBox;
       private JTextField plateNumberBox;
@@ -966,18 +981,22 @@ public class VCRTSGUI {
 
       @Override
       public void actionPerformed(ActionEvent e) {
-         
-         if(monthsSelected) {
-            this.setResidency(this.getResidency() * 30);
-         }
 
          if(!this.getMake().equals("") && !this.getModel().equals("") && 
          !this.getLicensePlateNumber().equals("") && this.getResidency() > 0) {
-            sendVehicleRentalRequest(this.getMake(), this.getModel(), this.getLicensePlateNumber(), this.getResidency(), currentUser.getUsername());
-            clearFields();
-            System.out.println("Car Rented Successfully");
-            infoBoxMessage.setText("Car rented successfully!");
-            infoBox.setVisible(true);
+            if(monthsSelected && !rentalAttempted) {
+               this.setResidency(this.getResidency() * 30);
+            }
+            if(sendVehicleRentalRequest(this.getMake(), this.getModel(), this.getLicensePlateNumber(), this.getResidency(), currentUser.getUsername())) {
+               clearFields();
+               infoBoxMessage.setText("Vehicle rented successfully!");
+               infoBox.setVisible(true);
+            }
+            else {
+               infoBoxMessage.setText("Rental request was rejected by VC Controller.");
+               infoBox.setVisible(true);
+               rentalAttempted = true;
+            }
          }
          else {
             System.out.println("An error occurred. Please try again. Be sure to fill out all fields correctly.");
@@ -985,14 +1004,16 @@ public class VCRTSGUI {
             infoBox.setVisible(true);
          }
       }
-      public void sendVehicleRentalRequest(String make, String model, String licensePlateNumber, int residency, String username){
+      public boolean sendVehicleRentalRequest(String make, String model, String licensePlateNumber, int residency, String username){
          try {
             outputStream.writeUTF("database sendRentalRequest");
             if(inputStream.readUTF().equals("send vehicle fields")){
                outputStream.writeUTF(make + "," + model + "," + licensePlateNumber + "," + residency + "," + username);
             }
+            return inputStream.readBoolean();
          } catch (IOException e) {
             System.out.println("An error occurred while trying to send job request");
+            return false;
          }
       }
 
@@ -1026,6 +1047,7 @@ public class VCRTSGUI {
                   break;
                }
                case "Residency Duration": {
+                  rentalAttempted = false;
                   residencyBox = (JTextField)e.getSource();
                   try {
                      int residencyTime = Integer.parseInt(((JTextField)e.getSource()).getText());
@@ -1056,6 +1078,7 @@ public class VCRTSGUI {
          this.setModel("");
          this.setLicensePlateNumber("");
          this.setResidency(0);
+         rentalAttempted = false;
       }
    }
 }

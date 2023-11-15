@@ -3,6 +3,7 @@ import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.Dialog.ModalityType;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -12,6 +13,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -36,6 +38,8 @@ public class Controller {
   private JFrame frame = new JFrame();
   private JPanel jobsPanel = new JPanel(new GridLayout());
   private JPanel rentalsPanel = new JPanel(new GridLayout());
+  private JDialog messageBox = new JDialog();
+  private boolean acceptChosen = false;
   private final int APP_WIDTH = 480;
   private final int APP_HEIGHT = 600;
 
@@ -54,7 +58,14 @@ public class Controller {
     frame.setTitle("Vehicular Cloud Real Time Controller");
     frame.setSize(APP_WIDTH, APP_HEIGHT);
     frame.setResizable(false);
-    frame.setLocation(600, 100);
+    frame.setLocation(850, 100);
+
+    messageBox.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+    messageBox.setLayout(new GridLayout(5, 1));
+    messageBox.setSize(300, 400);
+    messageBox.setResizable(false);
+    messageBox.setLocation(900, 175);
+    messageBox.setModalityType(ModalityType.APPLICATION_MODAL);
 
     startApp();
     frame.setVisible(true);
@@ -224,6 +235,72 @@ public class Controller {
     frame.validate();
   }
 
+  public void showMessage(Job j) {
+    messageBox.getContentPane().removeAll();
+    JLabel row1 = new JLabel("             Incoming Job Submission Request");
+    JLabel row2 = new JLabel("             Job Title: " + j.getTitle());
+    JLabel row3 = new JLabel("             Job Description: " + j.getDescription());
+    JLabel row4 = new JLabel("             Job Duration Time: " + j.getDurationTime() + " minutes");
+    JPanel row5 = new JPanel(new FlowLayout(FlowLayout.CENTER));
+
+    JButton accept = new JButton("Accept");
+    JButton reject = new JButton("Reject");
+
+    accept.addActionListener(e -> {
+      acceptChosen = true;
+      messageBox.dispose();
+    });
+
+    reject.addActionListener(e -> {
+      acceptChosen = false;
+      messageBox.dispose();
+    });
+
+    row5.add(accept);
+    row5.add(reject);
+
+    messageBox.add(row1);
+    messageBox.add(row2);
+    messageBox.add(row3);
+    messageBox.add(row4);
+    messageBox.add(row5);
+    messageBox.validate();
+    messageBox.setVisible(true);
+  }
+
+  public void showMessage(Vehicle v) {
+    messageBox.getContentPane().removeAll();
+    JLabel row1 = new JLabel("             Incoming Vehicle Rental Request");
+    JLabel row2 = new JLabel("             Vehicle Make: " + v.getMake());
+    JLabel row3 = new JLabel("             Vehicle Model: " + v.getModel());
+    JLabel row4 = new JLabel("             Vehicle Residency Time: " + v.getResidency() + " days");
+    JPanel row5 = new JPanel(new FlowLayout(FlowLayout.CENTER));
+
+    JButton accept = new JButton("Accept");
+    JButton reject = new JButton("Reject");
+
+    accept.addActionListener(e -> {
+      acceptChosen = true;
+      messageBox.dispose();
+    });
+
+    reject.addActionListener(e -> {
+      acceptChosen = false;
+      messageBox.dispose();
+    });
+
+    row5.add(accept);
+    row5.add(reject);
+
+    messageBox.add(row1);
+    messageBox.add(row2);
+    messageBox.add(row3);
+    messageBox.add(row4);
+    messageBox.add(row5);
+    messageBox.validate();
+    messageBox.setVisible(true);
+  }
+
   public void assignJob(Job j) {
     jobs.add(j);
     completionTimes.put(j, minutesFromStart + j.getDurationTime());
@@ -351,20 +428,25 @@ public class Controller {
           Job job = new Job(jobTitle, jobDescription, jobDurationTime, LocalDate.parse(deadline));
           Client c;
 
-          if(database.isClient(username)){
-            c = database.getClient(username);
-            job.setJobOwner(c);
-            c.submitJob(job,this);
-          }
-          else {
-            c = new Client(database.getUser(username).getUsername(),database.getUser(username).getPassword());
-            job.setJobOwner(c);
-            database.addClient(c);
-            c.submitJob(job,this);
-          }
-          database.updateDatabase("New Job Submitted", c);
-          updateJobsPanel();
+          showMessage(job);
 
+          if(acceptChosen) {
+            if(database.isClient(username)){
+              c = database.getClient(username);
+              job.setJobOwner(c);
+              c.submitJob(job,this);
+            }
+            else {
+              c = new Client(database.getUser(username).getUsername(),database.getUser(username).getPassword());
+              job.setJobOwner(c);
+              database.addClient(c);
+              c.submitJob(job,this);
+            }
+            database.updateDatabase("New Job Submitted", c);
+            updateJobsPanel();
+          }
+          
+          outputStream.writeBoolean(acceptChosen);
           break;
         }
         catch(IOException e) {
@@ -400,7 +482,8 @@ public class Controller {
           System.out.println("A number format exception occurred while trying to calculate job completion time");
         }
       }
-        case "database sendRentalRequest": {
+      
+      case "database sendRentalRequest": {
         try {
           String make, model, licensePlateNumber, username;
           int residency = 0;
@@ -417,22 +500,27 @@ public class Controller {
           Vehicle vehicle = new Vehicle(make, model, licensePlateNumber, residency);
           Owner o;
           
-          if(database.isOwner(username)){
-            o = database.getOwner(username);
-            vehicle.setVehicleOwner(o);
-            vehicle.setArrivalTime(new Date());
-            o.rentVehicle(vehicle,this);
-          }
-          else {
-            o = new Owner(database.getUser(username).getUsername(),database.getUser(username).getPassword());
-            database.addOwner(o);
-            vehicle.setVehicleOwner(o);
-            vehicle.setArrivalTime(new Date());
-            o.rentVehicle(vehicle,this);
-          }
-          database.updateDatabase("New Vehice Rented", o); 
-          updateRentalsPanel();
+          showMessage(vehicle);
 
+          if(acceptChosen) {
+            if(database.isOwner(username)){
+              o = database.getOwner(username);
+              vehicle.setVehicleOwner(o);
+              vehicle.setArrivalTime(new Date());
+              o.rentVehicle(vehicle,this);
+            }
+            else {
+              o = new Owner(database.getUser(username).getUsername(),database.getUser(username).getPassword());
+              database.addOwner(o);
+              vehicle.setVehicleOwner(o);
+              vehicle.setArrivalTime(new Date());
+              o.rentVehicle(vehicle,this);
+            }
+            database.updateDatabase("New Vehice Rented", o); 
+            updateRentalsPanel();
+          }
+
+          outputStream.writeBoolean(acceptChosen);
           break;
         }
         catch(IOException e) {
