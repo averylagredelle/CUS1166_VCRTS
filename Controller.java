@@ -474,12 +474,15 @@ public class Controller {
           deadline = LocalDate.parse(paramsList[3]);
 
           outputStream.writeInt(calculateJobCompletionTime(new Job(title, description, durationTime, deadline)));
+          break;
         }
         catch(IOException e) {
           System.out.println("An IO exception occurred while trying to calculate job completion time");
+          break;
         }
         catch(NumberFormatException n) {
           System.out.println("A number format exception occurred while trying to calculate job completion time");
+          break;
         }
       }
       
