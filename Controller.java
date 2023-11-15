@@ -2,11 +2,13 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import javax.swing.JButton;
@@ -32,10 +34,10 @@ public class Controller {
   private HashMap<Job, Integer> completionTimes;
 
   private JFrame frame = new JFrame();
-  private JPanel jobsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+  private JPanel jobsPanel = new JPanel(new GridLayout());
+  private JPanel rentalsPanel = new JPanel(new GridLayout());
   private final int APP_WIDTH = 480;
   private final int APP_HEIGHT = 600;
-  private String[] pages;
 
   public Controller() {
     jobs = new ArrayList<Job>();
@@ -87,6 +89,7 @@ public class Controller {
   public void startApp() {
     createIntroScreen();
     createJobsListScreen();
+    createRentalsListScreen();
   }
 
   public void createIntroScreen() {
@@ -121,6 +124,10 @@ public class Controller {
       ((CardLayout)frame.getContentPane().getLayout()).show(frame.getContentPane(), "Job List Screen");
     });
 
+    showVehicles.addActionListener(e -> {
+      ((CardLayout)frame.getContentPane().getLayout()).show(frame.getContentPane(), "Rental List Screen");
+    });
+
     mainPanel.add(textPanel);
     mainPanel.add(buttonPanel);
     frame.add(mainPanel, "Intro Screen");
@@ -139,6 +146,11 @@ public class Controller {
 
     jobContainer = new JScrollPane(jobsPanel);
     jobContainer.setBorder(null);
+    jobContainer.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+    showVehicles.addActionListener(e -> {
+      ((CardLayout)frame.getContentPane().getLayout()).show(frame.getContentPane(), "Rental List Screen");
+    });
 
     buttonPanel.add(showJobs);
     buttonPanel.add(showVehicles);
@@ -149,16 +161,65 @@ public class Controller {
     frame.add(mainPanel, "Job List Screen");
   }
 
+  public void createRentalsListScreen() {
+    JPanel mainPanel = new JPanel(new BorderLayout());
+    JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    JLabel title = new JLabel("Current Vehicles Rented to VC System by Users");
+    JScrollPane rentalContainer;
+    JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 100, 50));
+    JButton showJobs = new JButton("Show Jobs");
+    JButton showVehicles = new JButton("Show Vehicles");
+
+    titlePanel.add(title);
+
+    rentalContainer = new JScrollPane(rentalsPanel);
+    rentalContainer.setBorder(null);
+    rentalContainer.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+    showJobs.addActionListener(e -> {
+      ((CardLayout)frame.getContentPane().getLayout()).show(frame.getContentPane(), "Job List Screen");
+    });
+
+    buttonPanel.add(showJobs);
+    buttonPanel.add(showVehicles);
+
+    mainPanel.add(titlePanel, BorderLayout.NORTH);
+    mainPanel.add(rentalContainer, BorderLayout.CENTER);
+    mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+    frame.add(mainPanel, "Rental List Screen");
+  }
+
   public void updateJobsPanel() {
     jobsPanel.removeAll();
+    ((GridLayout)jobsPanel.getLayout()).setRows(jobs.size() * 8);
+    ((GridLayout)jobsPanel.getLayout()).setColumns(1);
     for(int i = 0; i < this.jobs.size(); i++) {
-      jobsPanel.add(new JLabel("............................................................................................................................................."));
-      jobsPanel.add(new JLabel("                                                                             Job " + String.valueOf(i + 1) + ": " + this.jobs.get(i).getTitle() + "                                                                            "));
-      jobsPanel.add(new JLabel("                                                                             Description: " + this.jobs.get(i).getDescription() + "                                                                            "));
-      jobsPanel.add(new JLabel("                                                                             Duration Time: " + this.jobs.get(i).getDurationTime() + " minutes                                                                           "));
-      jobsPanel.add(new JLabel("                                                                             Deadline: " + this.jobs.get(i).getDeadline() + "                                                                            "));
-      jobsPanel.add(new JLabel("                                                                             Owner: " + this.jobs.get(i).getJobOwner().getUsername() + "                                                                            "));
-      jobsPanel.add(new JLabel("                                                                             Time Completed: " + completionTimes.get(this.jobs.get(i)) + "                                                                            "));
+      jobsPanel.add(new JLabel(".............................................................................................................................."));
+      jobsPanel.add(new JLabel("                               Job " + String.valueOf(i + 1) + ": " + this.jobs.get(i).getTitle()));
+      jobsPanel.add(new JLabel("                               Description: " + this.jobs.get(i).getDescription()));
+      jobsPanel.add(new JLabel("                               Duration Time: " + this.jobs.get(i).getDurationTime() + " minutes"));
+      jobsPanel.add(new JLabel("                               Deadline: " + this.jobs.get(i).getDeadline()));
+      jobsPanel.add(new JLabel("                               Job Owner: " + this.jobs.get(i).getJobOwner().getUsername()));
+      jobsPanel.add(new JLabel("                               Time Completed: " + completionTimes.get(this.jobs.get(i))));
+    }
+    JPanel totalTimePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    totalTimePanel.add(new JLabel("*****Total Run Time: " + minutesFromStart + "*****"));
+    jobsPanel.add(totalTimePanel);
+    frame.validate();
+  }
+
+  public void updateRentalsPanel() {
+    rentalsPanel.removeAll();
+    ((GridLayout)rentalsPanel.getLayout()).setRows(vehicles.size() * 7);
+    ((GridLayout)rentalsPanel.getLayout()).setColumns(1);
+    for(int i = 0; i < vehicles.size(); i++) {
+      rentalsPanel.add(new JLabel(".............................................................................................................................."));
+      rentalsPanel.add(new JLabel("                               Vehicle " + String.valueOf(i + 1) + " Make: " + vehicles.get(i).getMake()));
+      rentalsPanel.add(new JLabel("                               Model: " + vehicles.get(i).getModel()));
+      rentalsPanel.add(new JLabel("                               License Plate Number: " + vehicles.get(i).getLicensePlateNumber()));
+      rentalsPanel.add(new JLabel("                               Residency: " + vehicles.get(i).getResidency() + " days"));
+      rentalsPanel.add(new JLabel("                               Vehicle Arrival Time: " + vehicles.get(i).getArrivalTime()));
+      rentalsPanel.add(new JLabel("                               Vehicle Owner: " + vehicles.get(i).getVehicleOwner().getUsername()));
     }
     frame.validate();
   }
@@ -358,14 +419,19 @@ public class Controller {
           
           if(database.isOwner(username)){
             o = database.getOwner(username);
+            vehicle.setVehicleOwner(o);
+            vehicle.setArrivalTime(new Date());
             o.rentVehicle(vehicle,this);
           }
           else {
             o = new Owner(database.getUser(username).getUsername(),database.getUser(username).getPassword());
             database.addOwner(o);
+            vehicle.setVehicleOwner(o);
+            vehicle.setArrivalTime(new Date());
             o.rentVehicle(vehicle,this);
           }
           database.updateDatabase("New Vehice Rented", o); 
+          updateRentalsPanel();
 
           break;
         }
