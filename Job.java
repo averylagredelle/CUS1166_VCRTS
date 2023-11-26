@@ -15,7 +15,7 @@ public class Job {
         this.deadline = LocalDate.parse("2000-01-01");
     }
 
-    public Job(String title, String description, int durationTime, LocalDate deadline) {
+    public Job(String title, String description, int durationTime, LocalDate deadline) {/* getters and setters for all parameters*/
         this.title = title;
         this.description = description;
         this.durationTime = durationTime;
@@ -23,7 +23,7 @@ public class Job {
         this.inProgress = true;
     }
 
-    public String getTitle() {
+    public String getTitle() {/* title of job  */
         return title;
     }
 
@@ -31,7 +31,7 @@ public class Job {
         this.title = title;
     }
 
-    public String getDescription() {
+    public String getDescription() {/* description of job  */
         return description;
     }
 
@@ -39,7 +39,7 @@ public class Job {
         this.description = description;
     }
 
-    public int getDurationTime() {
+    public int getDurationTime() {/* time the job will take to be completed   */
         return durationTime;
     }
 
@@ -47,7 +47,7 @@ public class Job {
         this.durationTime = durationTime;
     }
 
-    public LocalDate getDeadline() {
+    public LocalDate getDeadline() { /* dead line for job time  */
         return deadline;
     }
 
@@ -55,7 +55,7 @@ public class Job {
         this.deadline = deadline;
     }
 
-    public boolean isInProgress() {
+    public boolean isInProgress() { /*boolean that sends true or false statement fro whether the job in is progress  */
         return inProgress;
     }
 
@@ -63,7 +63,7 @@ public class Job {
         this.inProgress = inProgress;
     }
 
-    public Client getJobOwner() {
+    public Client getJobOwner() { /* user who requested the job */
         return jobOwner;
     }
 
@@ -72,7 +72,7 @@ public class Job {
     }
 
     @Override
-    public String toString() {
+    public String toString() {  //to string method will add all information into database txt file
         return "|Title: " + title + "|Description: " + description + "|Duration Time: " + 
             durationTime + " minutes |Deadline: " + deadline;
     }

@@ -1,21 +1,30 @@
+import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.awt.Dialog.ModalityType;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
+import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 public class Controller {
   private ArrayList<Vehicle> vehicles;
   private ArrayList<Job> jobs;
   private Server database;
-  private int redundancyLevel;
+  //private int redundancyLevel;
 
   private static ServerSocket serverSocket;
   private static Socket socket;
@@ -27,6 +36,10 @@ public class Controller {
   private HashMap<Job, Integer> completionTimes;
 
   private JFrame frame = new JFrame();
+  private JPanel jobsPanel = new JPanel(new GridLayout());
+  private JPanel rentalsPanel = new JPanel(new GridLayout());
+  private JDialog messageBox = new JDialog();
+  private boolean acceptChosen = false;
   private final int APP_WIDTH = 480;
   private final int APP_HEIGHT = 600;
 
@@ -45,7 +58,14 @@ public class Controller {
     frame.setTitle("Vehicular Cloud Real Time Controller");
     frame.setSize(APP_WIDTH, APP_HEIGHT);
     frame.setResizable(false);
-    frame.setLocation(600, 100);
+    frame.setLocation(850, 100);
+
+    messageBox.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+    messageBox.setLayout(new GridLayout(5, 1));
+    messageBox.setSize(300, 400);
+    messageBox.setResizable(false);
+    messageBox.setLocation(900, 175);
+    messageBox.setModalityType(ModalityType.APPLICATION_MODAL);
 
     startApp();
     frame.setVisible(true);
@@ -79,21 +99,206 @@ public class Controller {
 
   public void startApp() {
     createIntroScreen();
+    createJobsListScreen();
+    createRentalsListScreen();
   }
 
   public void createIntroScreen() {
-    JPanel introPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 100, 50));
+    JPanel mainPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    JPanel textPanel = new JPanel(new BorderLayout(0, 50));
+    JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
     JLabel title = new JLabel("Welcome to the Controller for the Vehicular Cloud Real Time System");
-    JTextArea description = new JTextArea("From this page, you are able to view jobs that have been submitted to the vehicular                         cloud system as well as their completion times.");
+    JPanel descriptionPanel = new JPanel(new BorderLayout());
+    JTextArea description = new JTextArea("On this page, you are able to view jobs that have been submitted to the vehicular cloud system with their completion times. You can also see how many vehicles are currently in the VC System. To begin, press \"Show Jobs\" or \"Show Vehicles\" below.");
+    JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 100, 50));
+    JButton showJobs = new JButton("Show Jobs");
+    JButton showVehicles = new JButton("Show Vehicles");
+
+    titlePanel.add(title);
 
     description.setLineWrap(true);
+    description.setWrapStyleWord(true);
     description.setEditable(false);
-    description.setSize(APP_WIDTH - 50, APP_HEIGHT - 50);
-    description.setFocusable(false);    
+    description.setMinimumSize(new Dimension(APP_WIDTH - 50, 200));
+    description.setFocusable(false);
 
-    introPanel.add(title);
-    introPanel.add(description);
-    frame.add(introPanel);
+    descriptionPanel.setSize(APP_WIDTH, 100);
+    descriptionPanel.add(description);
+
+    textPanel.add(titlePanel, BorderLayout.NORTH);
+    textPanel.add(descriptionPanel, BorderLayout.CENTER);
+
+    buttonPanel.add(showJobs);
+    buttonPanel.add(showVehicles);
+
+    showJobs.addActionListener(e -> {
+      ((CardLayout)frame.getContentPane().getLayout()).show(frame.getContentPane(), "Job List Screen");
+    });
+
+    showVehicles.addActionListener(e -> {
+      ((CardLayout)frame.getContentPane().getLayout()).show(frame.getContentPane(), "Rental List Screen");
+    });
+
+    mainPanel.add(textPanel);
+    mainPanel.add(buttonPanel);
+    frame.add(mainPanel, "Intro Screen");
+  }
+
+  public void createJobsListScreen() {
+    JPanel mainPanel = new JPanel(new BorderLayout());
+    JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    JLabel title = new JLabel("Current Jobs Requested From Users");
+    JScrollPane jobContainer;
+    JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 100, 50));
+    JButton showJobs = new JButton("Show Jobs");
+    JButton showVehicles = new JButton("Show Vehicles");
+
+    titlePanel.add(title);
+
+    jobContainer = new JScrollPane(jobsPanel);
+    jobContainer.setBorder(null);
+    jobContainer.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+    showVehicles.addActionListener(e -> {
+      ((CardLayout)frame.getContentPane().getLayout()).show(frame.getContentPane(), "Rental List Screen");
+    });
+
+    buttonPanel.add(showJobs);
+    buttonPanel.add(showVehicles);
+
+    mainPanel.add(titlePanel, BorderLayout.NORTH);
+    mainPanel.add(jobContainer, BorderLayout.CENTER);
+    mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+    frame.add(mainPanel, "Job List Screen");
+  }
+
+  public void createRentalsListScreen() {
+    JPanel mainPanel = new JPanel(new BorderLayout());
+    JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    JLabel title = new JLabel("Current Vehicles Rented to VC System by Users");
+    JScrollPane rentalContainer;
+    JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 100, 50));
+    JButton showJobs = new JButton("Show Jobs");
+    JButton showVehicles = new JButton("Show Vehicles");
+
+    titlePanel.add(title);
+
+    rentalContainer = new JScrollPane(rentalsPanel);
+    rentalContainer.setBorder(null);
+    rentalContainer.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+    showJobs.addActionListener(e -> {
+      ((CardLayout)frame.getContentPane().getLayout()).show(frame.getContentPane(), "Job List Screen");
+    });
+
+    buttonPanel.add(showJobs);
+    buttonPanel.add(showVehicles);
+
+    mainPanel.add(titlePanel, BorderLayout.NORTH);
+    mainPanel.add(rentalContainer, BorderLayout.CENTER);
+    mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+    frame.add(mainPanel, "Rental List Screen");
+  }
+
+  public void updateJobsPanel() {
+    jobsPanel.removeAll();
+    ((GridLayout)jobsPanel.getLayout()).setRows(jobs.size() * 8);
+    ((GridLayout)jobsPanel.getLayout()).setColumns(1);
+    for(int i = 0; i < this.jobs.size(); i++) {
+      jobsPanel.add(new JLabel(".............................................................................................................................."));
+      jobsPanel.add(new JLabel("                               Job " + String.valueOf(i + 1) + ": " + this.jobs.get(i).getTitle()));
+      jobsPanel.add(new JLabel("                               Description: " + this.jobs.get(i).getDescription()));
+      jobsPanel.add(new JLabel("                               Duration Time: " + this.jobs.get(i).getDurationTime() + " minutes"));
+      jobsPanel.add(new JLabel("                               Deadline: " + this.jobs.get(i).getDeadline()));
+      jobsPanel.add(new JLabel("                               Job Owner: " + this.jobs.get(i).getJobOwner().getUsername()));
+      jobsPanel.add(new JLabel("                               Time Completed: " + completionTimes.get(this.jobs.get(i))));
+    }
+    JPanel totalTimePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    totalTimePanel.add(new JLabel("*****Total Run Time: " + minutesFromStart + "*****"));
+    jobsPanel.add(totalTimePanel);
+    frame.validate();
+  }
+
+  public void updateRentalsPanel() {
+    rentalsPanel.removeAll();
+    ((GridLayout)rentalsPanel.getLayout()).setRows(vehicles.size() * 7);
+    ((GridLayout)rentalsPanel.getLayout()).setColumns(1);
+    for(int i = 0; i < vehicles.size(); i++) {
+      rentalsPanel.add(new JLabel(".............................................................................................................................."));
+      rentalsPanel.add(new JLabel("                               Vehicle " + String.valueOf(i + 1) + " Make: " + vehicles.get(i).getMake()));
+      rentalsPanel.add(new JLabel("                               Model: " + vehicles.get(i).getModel()));
+      rentalsPanel.add(new JLabel("                               License Plate Number: " + vehicles.get(i).getLicensePlateNumber()));
+      rentalsPanel.add(new JLabel("                               Residency: " + vehicles.get(i).getResidency() + " days"));
+      rentalsPanel.add(new JLabel("                               Vehicle Arrival Time: " + vehicles.get(i).getArrivalTime()));
+      rentalsPanel.add(new JLabel("                               Vehicle Owner: " + vehicles.get(i).getVehicleOwner().getUsername()));
+    }
+    frame.validate();
+  }
+
+  public void showMessage(Job j) {
+    messageBox.getContentPane().removeAll();
+    JLabel row1 = new JLabel("             Incoming Job Submission Request");
+    JLabel row2 = new JLabel("             Job Title: " + j.getTitle());
+    JLabel row3 = new JLabel("             Job Description: " + j.getDescription());
+    JLabel row4 = new JLabel("             Job Duration Time: " + j.getDurationTime() + " minutes");
+    JPanel row5 = new JPanel(new FlowLayout(FlowLayout.CENTER));
+
+    JButton accept = new JButton("Accept");
+    JButton reject = new JButton("Reject");
+
+    accept.addActionListener(e -> {
+      acceptChosen = true;
+      messageBox.dispose();
+    });
+
+    reject.addActionListener(e -> {
+      acceptChosen = false;
+      messageBox.dispose();
+    });
+
+    row5.add(accept);
+    row5.add(reject);
+
+    messageBox.add(row1);
+    messageBox.add(row2);
+    messageBox.add(row3);
+    messageBox.add(row4);
+    messageBox.add(row5);
+    messageBox.validate();
+    messageBox.setVisible(true);
+  }
+
+  public void showMessage(Vehicle v) {
+    messageBox.getContentPane().removeAll();
+    JLabel row1 = new JLabel("             Incoming Vehicle Rental Request");
+    JLabel row2 = new JLabel("             Vehicle Make: " + v.getMake());
+    JLabel row3 = new JLabel("             Vehicle Model: " + v.getModel());
+    JLabel row4 = new JLabel("             Vehicle Residency Time: " + v.getResidency() + " days");
+    JPanel row5 = new JPanel(new FlowLayout(FlowLayout.CENTER));
+
+    JButton accept = new JButton("Accept");
+    JButton reject = new JButton("Reject");
+
+    accept.addActionListener(e -> {
+      acceptChosen = true;
+      messageBox.dispose();
+    });
+
+    reject.addActionListener(e -> {
+      acceptChosen = false;
+      messageBox.dispose();
+    });
+
+    row5.add(accept);
+    row5.add(reject);
+
+    messageBox.add(row1);
+    messageBox.add(row2);
+    messageBox.add(row3);
+    messageBox.add(row4);
+    messageBox.add(row5);
+    messageBox.validate();
+    messageBox.setVisible(true);
   }
 
   public void assignJob(Job j) {
@@ -189,7 +394,7 @@ public class Controller {
           break;
         }
       }
-
+    
       case "recordNewLogin": {
         try {
           String username;
@@ -206,28 +411,132 @@ public class Controller {
         }
       }
 
-        case "sendJobRequest": {
-          try {
-            String jobTitle;
-            String jobDescription;
-            int jobDurationTime;
-            String deadline;
-            String username;
-            outputStream.writeUTF("send job field");
-            jobTitle = inputStream.readUTF();
-            jobDescription = inputStream.readUTF();
-            jobDurationTime = Integer.valueOf(inputStream.readUTF());
-            deadline = inputStream.readUTF();
-            username = inputStream.readUTF();
-            break;
+      case "database sendJobRequest": {
+        try {
+          String jobTitle, jobDescription, deadline, username;
+          int jobDurationTime = 0;
+
+          outputStream.writeUTF("send job fields");
+          String params = inputStream.readUTF();
+          String[] paramsList = params.split(",");
+          jobTitle = paramsList[0];
+          jobDescription = paramsList[1];
+          jobDurationTime = Integer.parseInt(paramsList[2]);
+          deadline = paramsList[3];
+          username = paramsList[4];
+
+          Job job = new Job(jobTitle, jobDescription, jobDurationTime, LocalDate.parse(deadline));
+          Client c;
+
+          showMessage(job);
+
+          if(acceptChosen) {
+            if(database.isClient(username)){
+              c = database.getClient(username);
+              job.setJobOwner(c);
+              c.submitJob(job,this);
+            }
+            else {
+              c = new Client(database.getUser(username).getUsername(),database.getUser(username).getPassword());
+              job.setJobOwner(c);
+              database.addClient(c);
+              c.submitJob(job,this);
+            }
+            database.updateDatabase("New Job Submitted", c);
+            updateJobsPanel();
           }
+          
+          outputStream.writeBoolean(acceptChosen);
+          break;
+        }
         catch(IOException e) {
-          System.out.println("An error occurred with recordNewLogin()");
+          System.out.println("An error occurred with recordsendJobRequest()");
+          break;
+        } catch(NumberFormatException e) {
+          System.out.println("An error occurred with Integer.parseInt");
           break;
         }
       }
-    }
+
+      case "controller calculateJobCompletionTime": {
+        try {
+          String title, description;
+          int durationTime = -1;
+          LocalDate deadline;
+
+          outputStream.writeUTF("send job params");
+          String params = inputStream.readUTF();
+          String[] paramsList = params.split(",");
+
+          title = paramsList[0];
+          description = paramsList[1];
+          durationTime = Integer.parseInt(paramsList[2]);
+          deadline = LocalDate.parse(paramsList[3]);
+
+          outputStream.writeInt(calculateJobCompletionTime(new Job(title, description, durationTime, deadline)));
+          break;
+        }
+        catch(IOException e) {
+          System.out.println("An IO exception occurred while trying to calculate job completion time");
+          break;
+        }
+        catch(NumberFormatException n) {
+          System.out.println("A number format exception occurred while trying to calculate job completion time");
+          break;
+        }
+      }
+      
+      case "database sendRentalRequest": {
+        try {
+          String make, model, licensePlateNumber, username;
+          int residency = 0;
+          outputStream.writeUTF("send vehicle fields");
+          String params = inputStream.readUTF();
+          String[] paramsList = params.split(",");
+
+          make = paramsList[0];
+          model = paramsList[1];
+          licensePlateNumber = paramsList[2];
+          residency = Integer.parseInt(paramsList[3]);
+          username = paramsList[4];
+         
+          Vehicle vehicle = new Vehicle(make, model, licensePlateNumber, residency);
+          Owner o;
+          
+          showMessage(vehicle);
+
+          if(acceptChosen) {
+            if(database.isOwner(username)){
+              o = database.getOwner(username);
+              vehicle.setVehicleOwner(o);
+              vehicle.setArrivalTime(new Date());
+              o.rentVehicle(vehicle,this);
+            }
+            else {
+              o = new Owner(database.getUser(username).getUsername(),database.getUser(username).getPassword());
+              database.addOwner(o);
+              vehicle.setVehicleOwner(o);
+              vehicle.setArrivalTime(new Date());
+              o.rentVehicle(vehicle,this);
+            }
+            database.updateDatabase("New Vehice Rented", o); 
+            updateRentalsPanel();
+          }
+
+          outputStream.writeBoolean(acceptChosen);
+          break;
+        }
+        catch(IOException e) {
+          System.out.println("An error occurred with recordsendJobRequest()");
+          break;
+        } catch(NumberFormatException e) {
+          System.out.println("An error occurred with Integer.parseInt");
+          break;
+        }
+      }         
     }
   }
+}
+
 
 

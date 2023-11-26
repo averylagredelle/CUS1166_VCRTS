@@ -50,11 +50,8 @@ public class VCRTSGUI {
    private PageSwitcher switcher = new PageSwitcher();
    private UserVerifier verifier = new UserVerifier();
    private JobRequestListener jobRequestListener = new JobRequestListener();
-   private CarRentalRequestListener rentalRequestListener = new CarRentalRequestListener();
+   private VehicleRentalRequestListener rentalRequestListener = new VehicleRentalRequestListener();
    private User currentUser;
-   private boolean currentUserIsNew;
-   //private Server database = new Server();
-   //private Controller controller = new Controller();
    private static Socket socket;
    private static DataInputStream inputStream;
    private static DataOutputStream outputStream;
@@ -72,7 +69,7 @@ public class VCRTSGUI {
       frame.setTitle("Vehicular Cloud Real Time System");
       frame.setSize(APP_WIDTH, APP_HEIGHT);
       frame.setResizable(false);
-      frame.setLocation(600, 100);
+      frame.setLocation(250, 100);
       frame.getContentPane().setBackground(Color.BLUE);
 
       infoBoxMessage.setHorizontalAlignment(JLabel.CENTER);
@@ -81,7 +78,7 @@ public class VCRTSGUI {
       infoBox.setLayout(new BorderLayout());
       infoBox.setSize(300, 200);
       infoBox.setResizable(false);
-      infoBox.setLocationRelativeTo(frame);
+      infoBox.setLocation(300, 175);
       infoBox.setModalityType(ModalityType.APPLICATION_MODAL);
       infoBox.add(infoBoxMessage, BorderLayout.CENTER);
 
@@ -406,6 +403,8 @@ public class VCRTSGUI {
       jobTitleSubPanel.add(jobTitle);
 
       jobDescription.setName("Job Description");
+      jobDescription.setWrapStyleWord(true);
+      jobDescription.setLineWrap(true);
       jobDescription.addKeyListener(jobRequestListener);
       
       jobDescriptionSubPanel.setLayout(new BorderLayout());
@@ -708,7 +707,6 @@ public class VCRTSGUI {
          if(((JButton)e.getSource()).getText().equals("Sign Up")) {
             if(!this.getUsername().equals("") && !this.getPassword().equals("") && !accountExists(this.getUsername())) {
                currentUser = new User(this.getUsername(), this.getPassword());
-               currentUserIsNew = true;
                addUserToDatabase(currentUser.getUsername(), currentUser.getPassword());
                clearFields();
                currentUserId.setText("     User ID: " + currentUser.getUsername());
@@ -723,7 +721,6 @@ public class VCRTSGUI {
          else if(((JButton)e.getSource()).getText().equals("Login")) {
             if(accountExists(this.getUsername(), this.getPassword())) {
                currentUser = new User(this.getUsername(), this.getPassword());
-               currentUserIsNew = false;
                recordNewLogin(currentUser.getUsername());
                clearFields();
                currentUserId.setText("     User ID: " + currentUser.getUsername());
@@ -784,6 +781,7 @@ public class VCRTSGUI {
    class JobRequestListener extends Job implements KeyListener, ActionListener, ItemListener, FieldClearer {
       private boolean timeChoiceHours = true;
       private boolean jobTimeCompletionChecked = false;
+      private boolean attemptedSubmit = false;
       private String month = "";
       private String day = "";
       private String year = "";
@@ -809,62 +807,66 @@ public class VCRTSGUI {
 
       @Override
       public void actionPerformed(ActionEvent e) {
-         
-         if(timeChoiceHours && !jobTimeCompletionChecked)
-            this.setDurationTime(this.getDurationTime() * 60);
 
          if(!this.getTitle().equals("") && !this.getDescription().equals("") && this.getDurationTime() > 0 && 
          !month.equals("") && !day.equals("") && !year.equals("")) {
             
+            if(timeChoiceHours && !jobTimeCompletionChecked && !attemptedSubmit) {
+               this.setDurationTime(this.getDurationTime() * 60); 
+            }
+
             String deadline = year + "-" + month + "-" + day;
             this.setDeadline(LocalDate.parse(deadline));
 
-            Client thisClient;
-            // if(database.isClient(currentUser.getUsername())) {
-            //    //thisClient = database.getClient(currentUser.getUsername());
-            // }
-            // else {
-            //    thisClient = new Client(currentUser.getUsername(), currentUser.getPassword());
-            // }
-
-            Job newJob = new Job(this.getTitle(), this.getDescription(), this.getDurationTime(), this.getDeadline());
-
             if(((JButton)e.getSource()).getName().equals("Calculate Job Time")) {
                jobTimeCompletionChecked = true;
-               //infoBoxMessage.setText("Completion Time: " + controller.calculateJobCompletionTime(newJob) + " minutes from app start");
+               infoBoxMessage.setText("Completion Time: " + getJobCompletionTime(new Job(this.getTitle(), this.getDescription(), this.getDurationTime(), this.getDeadline())) + " minutes from app start");
                infoBox.setVisible(true);
             }
             else {
-               //thisClient.submitJob(newJob, controller);
-
-               // if(!database.isClient(thisClient.getUsername())) {
-               //    //database.addClient(thisClient);
-               // }
-
-               //database.updateDatabase("New Job Submitted", thisClient);
-               clearFields();
                jobTimeCompletionChecked = false;
-               System.out.println("Job submitted successfully");
-               infoBoxMessage.setText("Job submitted successfully!");
-               infoBox.setVisible(true);
+               if(sendJobRequest(this.getTitle(), this.getDescription(), this.getDurationTime(), this.getDeadline().toString(), currentUser.getUsername())) {
+                  clearFields();
+                  infoBoxMessage.setText("Job submitted successfully!");
+                  infoBox.setVisible(true);
+               }
+               else {
+                  attemptedSubmit = true;
+                  infoBoxMessage.setText("Job was rejected by VC Controller.");
+                  infoBox.setVisible(true);
+               }
             }
          }
          else {
-            System.out.println("An error occurred. Please ensure you filled out all of the text boxes correctly.");
             infoBoxMessage.setText("An error occurred. Please check inputs.");
             infoBox.setVisible(true);
          }
       }
 
       public boolean sendJobRequest(String jobTitle, String jobDescription, int jobDurationTime, String deadline, String username){
-         try{
+         try {
             outputStream.writeUTF("database sendJobRequest");
             if(inputStream.readUTF().equals("send job fields")){
-               outputStream.writeUTF(jobTitle + "," + jobDescription + "," + String.valueOf(jobDurationTime) + "," + deadline + "," + username);
+               outputStream.writeUTF(jobTitle + "," + jobDescription + "," + jobDurationTime + "," + deadline + "," + username);
             }
             return inputStream.readBoolean();
          } catch (IOException e) {
+            System.out.println("An error occurred while trying to send job request");
             return false;
+         }
+      }
+      
+
+      public int getJobCompletionTime(Job j) {
+         try {
+            outputStream.writeUTF("controller calculateJobCompletionTime");
+            if(inputStream.readUTF().equals("send job params")) {
+               outputStream.writeUTF(j.getTitle() + "," + j.getDescription() + "," + j.getDurationTime() + "," + j.getDeadline());
+            }
+            return inputStream.readInt();
+         } catch(IOException e) {
+            System.out.println("An error occurred while getting job completion time");
+            return -1;
          }
       }
 
@@ -898,6 +900,7 @@ public class VCRTSGUI {
                   }
                   case "Job Duration Time": {
                      durationTimeBox = (JTextField)e.getSource();
+                     attemptedSubmit = false;
                      try {
                         int time = Integer.parseInt(((JTextField)e.getSource()).getText());
                         this.setDurationTime(time);
@@ -941,11 +944,16 @@ public class VCRTSGUI {
          monthBox.setText("");
          dayBox.setText("");
          yearBox.setText("");
+         month = "";
+         day = "";
+         year = "";
 
          this.setTitle("");
          this.setDescription("");
          this.setDurationTime(0);
          this.setDeadline(LocalDate.parse("2000-01-01"));
+         attemptedSubmit = false;
+         System.out.println("Fields cleared");
       }
    }
 
@@ -953,17 +961,18 @@ public class VCRTSGUI {
     * This class is used for when users  rent new vehicles to the Vehicular Clous System. It listens for events that take place 
     * on the car rental page, such as the fields being filled out or the submit button being pressed.
     */
-   class CarRentalRequestListener extends Vehicle implements KeyListener, ActionListener, ItemListener, FieldClearer {
+   class VehicleRentalRequestListener extends Vehicle implements KeyListener, ActionListener, ItemListener, FieldClearer {
       private boolean monthsSelected = false;
+      private boolean rentalAttempted = false;
       private JTextField makeBox;
       private JTextField modelBox;
       private JTextField plateNumberBox;
       private JTextField residencyBox;
 
       /**
-       * Initializes the CarRentalRequestListener object.
+       * Initializes the VehicleRentalRequestListener object.
        */
-      public CarRentalRequestListener() {
+      public VehicleRentalRequestListener() {
          makeBox = new JTextField();
          modelBox = new JTextField();
          plateNumberBox = new JTextField();
@@ -972,40 +981,39 @@ public class VCRTSGUI {
 
       @Override
       public void actionPerformed(ActionEvent e) {
-         
-         if(monthsSelected) {
-            this.setResidency(this.getResidency() * 30);
-         }
 
          if(!this.getMake().equals("") && !this.getModel().equals("") && 
          !this.getLicensePlateNumber().equals("") && this.getResidency() > 0) {
-
-            Owner thisOwner;
-
-            // if(database.isOwner(currentUser.getUsername())) {
-            //    //thisOwner = database.getOwner(currentUser.getUsername());
-            // }
-            // else {
-            //    thisOwner = new Owner(currentUser.getUsername(), currentUser.getPassword());
-            // }
-
-            Vehicle newRental = new Vehicle(this.getMake(), this.getModel(), this.getLicensePlateNumber(), this.getResidency());
-            //thisOwner.rentVehicle(newRental, controller);
-
-            // if(!database.isOwner(thisOwner.getUsername())) {
-            //    //database.addOwner(thisOwner);
-            // }
-
-            //database.updateDatabase("New Rental Added", thisOwner);
-            clearFields();
-            System.out.println("Car Rented Successfully");
-            infoBoxMessage.setText("Car rented successfully!");
-            infoBox.setVisible(true);
+            if(monthsSelected && !rentalAttempted) {
+               this.setResidency(this.getResidency() * 30);
+            }
+            if(sendVehicleRentalRequest(this.getMake(), this.getModel(), this.getLicensePlateNumber(), this.getResidency(), currentUser.getUsername())) {
+               clearFields();
+               infoBoxMessage.setText("Vehicle rented successfully!");
+               infoBox.setVisible(true);
+            }
+            else {
+               infoBoxMessage.setText("Rental request was rejected by VC Controller.");
+               infoBox.setVisible(true);
+               rentalAttempted = true;
+            }
          }
          else {
             System.out.println("An error occurred. Please try again. Be sure to fill out all fields correctly.");
             infoBoxMessage.setText("An error occurred. Please check inputs.");
             infoBox.setVisible(true);
+         }
+      }
+      public boolean sendVehicleRentalRequest(String make, String model, String licensePlateNumber, int residency, String username){
+         try {
+            outputStream.writeUTF("database sendRentalRequest");
+            if(inputStream.readUTF().equals("send vehicle fields")){
+               outputStream.writeUTF(make + "," + model + "," + licensePlateNumber + "," + residency + "," + username);
+            }
+            return inputStream.readBoolean();
+         } catch (IOException e) {
+            System.out.println("An error occurred while trying to send job request");
+            return false;
          }
       }
 
@@ -1039,6 +1047,7 @@ public class VCRTSGUI {
                   break;
                }
                case "Residency Duration": {
+                  rentalAttempted = false;
                   residencyBox = (JTextField)e.getSource();
                   try {
                      int residencyTime = Integer.parseInt(((JTextField)e.getSource()).getText());
@@ -1069,6 +1078,7 @@ public class VCRTSGUI {
          this.setModel("");
          this.setLicensePlateNumber("");
          this.setResidency(0);
+         rentalAttempted = false;
       }
    }
 }
