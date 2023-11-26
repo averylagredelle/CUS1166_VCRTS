@@ -195,4 +195,8 @@ public class Server {
             e.printStackTrace();
         }
     }
+
+    //insert JobtoDatabase(Job, job)
+    
+    //insertOwnertoDatabase(owner, owner)
 }
