@@ -10,6 +10,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.geom.AffineTransform;
 import java.io.*;
 import java.net.Socket;
 import java.time.LocalDate;
@@ -60,6 +61,9 @@ public class VCRTSGUI {
    private Color backgroundColor;
    private Color buttonColor;
    private Color textColor;
+   private float buttonSize = 15;
+   private float textSize = 20;
+
 
 
    /**
@@ -128,6 +132,8 @@ public class VCRTSGUI {
     * Creates the intro screen for the GUI. This is the first screen that users see upon opening the app.
     */
    public void createIntroScreen() {
+     
+
       JPanel welcomePanel = new JPanel();
       JLabel welcomeMessage = new JLabel("Welcome to this Vehicular Cloud Real Time System!");
       JTextArea explanation = new JTextArea("If you already have an account with us, select \"Login\" below. If this is your first time using this vehicular cloud system, click the \"Sign Up\" button.");
@@ -140,21 +146,18 @@ public class VCRTSGUI {
       explanation.setWrapStyleWord(true);
       explanation.setSize(APP_WIDTH - 50, APP_HEIGHT - 50);
       explanation.setBackground(backgroundColor);
+      explanation.setFont(explanation.getFont().deriveFont(textSize));
 
       login.setName(LOGIN_PAGE_NAME);
       login.addActionListener(switcher);
       pageSwitchButtons.add(login);
-      login.setBackground(buttonColor);
       login.setForeground(textColor);
       login.setBackground(buttonColor);
       login.setBorderPainted(false);
       login.setOpaque(true);
-      login.addMouseListener(new java.awt.event.MouseAdapter() {
-         public void mouseEntered(java.awt.event.MouseEvent evt) {
-             login.setBackground(buttonColor);
-         }
-         public void mouseExited(java.awt.event.MouseEvent evt) {login.setBackground(UIManager.getColor(evt)); }
-    });
+      login.setFont(login.getFont().deriveFont(buttonSize));
+      
+      
 
       signUp.setName(SIGNUP_PAGE_NAME);
       signUp.addActionListener(switcher);
@@ -164,6 +167,9 @@ public class VCRTSGUI {
       signUp.setBackground(buttonColor);
       signUp.setBorderPainted(false);
       signUp.setOpaque(true);
+      signUp.setFont(signUp.getFont().deriveFont(buttonSize));
+
+
 
       welcomePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 100, 50));
       welcomePanel.setBounds(0, 0, APP_WIDTH, APP_HEIGHT);
@@ -214,12 +220,14 @@ public class VCRTSGUI {
       login.addActionListener(verifier);
       login.setBackground(buttonColor);
       login.setForeground(textColor);
+      login.setFont(login.getFont().deriveFont(buttonSize));
 
       back.setName(INTRO_PAGE_NAME);
       back.addActionListener(switcher); //back button
       back.setBackground(buttonColor);
       back.setForeground(textColor);
       pageSwitchButtons.add(back);
+
 
       loginPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 100, 50));
       loginPanel.setBackground(backgroundColor);

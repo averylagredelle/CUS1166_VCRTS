@@ -11,6 +11,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.awt.Color;
+
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -42,6 +44,12 @@ public class Controller {
   private boolean acceptChosen = false;
   private final int APP_WIDTH = 480;
   private final int APP_HEIGHT = 600;
+  private Color backgroundColor;
+  private Color buttonColor;
+  private Color textColor;
+  private float buttonSize = 15;
+  private float textSize = 20;
+
 
   public Controller() {
     jobs = new ArrayList<Job>();
@@ -49,6 +57,12 @@ public class Controller {
     minutesFromStart = 0;
     completionTimes = new HashMap<Job, Integer>();
     database = new Server();
+
+    backgroundColor = new Color(245, 205, 205);//background color
+      buttonColor = new Color(130,240,200);//button color
+      textColor = new Color(0,0,0);//text color
+
+
     //completed jobs output
     //completedJobsOutput into new file "completedjobs.txt"
     //throws FileNotFoundException
@@ -59,6 +73,8 @@ public class Controller {
     frame.setSize(APP_WIDTH, APP_HEIGHT);
     frame.setResizable(false);
     frame.setLocation(850, 100);
+
+    
 
     messageBox.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
     messageBox.setLayout(new GridLayout(5, 1));
@@ -115,32 +131,54 @@ public class Controller {
     JButton showVehicles = new JButton("Show Vehicles");
 
     titlePanel.add(title);
+    titlePanel.setBackground(backgroundColor);
+    title.setBackground(backgroundColor);
 
     description.setLineWrap(true);
     description.setWrapStyleWord(true);
     description.setEditable(false);
     description.setMinimumSize(new Dimension(APP_WIDTH - 50, 200));
     description.setFocusable(false);
+    description.setBackground(backgroundColor);
+    description.setFont(description.getFont().deriveFont(textSize));
+
+
 
     descriptionPanel.setSize(APP_WIDTH, 100);
     descriptionPanel.add(description);
+    descriptionPanel.setBackground(backgroundColor);
 
     textPanel.add(titlePanel, BorderLayout.NORTH);
     textPanel.add(descriptionPanel, BorderLayout.CENTER);
+    textPanel.setBackground(backgroundColor);
+
 
     buttonPanel.add(showJobs);
     buttonPanel.add(showVehicles);
+    buttonPanel.setBackground(backgroundColor);;
 
     showJobs.addActionListener(e -> {
       ((CardLayout)frame.getContentPane().getLayout()).show(frame.getContentPane(), "Job List Screen");
     });
+    showJobs.setForeground(textColor);
+    showJobs.setBackground(buttonColor);
+    showJobs.setBorderPainted(false);
+    showJobs.setOpaque(true);
+    showJobs.setFont(showJobs.getFont().deriveFont(buttonSize));
 
     showVehicles.addActionListener(e -> {
       ((CardLayout)frame.getContentPane().getLayout()).show(frame.getContentPane(), "Rental List Screen");
     });
+    showVehicles.setForeground(textColor);
+    showVehicles.setBackground(buttonColor);
+    showVehicles.setBorderPainted(false);
+    showVehicles.setOpaque(true);
+    showVehicles.setFont(showVehicles.getFont().deriveFont(buttonSize));
 
     mainPanel.add(textPanel);
     mainPanel.add(buttonPanel);
+    mainPanel.setBackground(backgroundColor);
+
     frame.add(mainPanel, "Intro Screen");
   }
 
@@ -154,6 +192,9 @@ public class Controller {
     JButton showVehicles = new JButton("Show Vehicles");
 
     titlePanel.add(title);
+    titlePanel.setBackground(backgroundColor);
+    title.setFont(title.getFont().deriveFont(textSize));
+
 
     jobContainer = new JScrollPane(jobsPanel);
     jobContainer.setBorder(null);
@@ -162,13 +203,32 @@ public class Controller {
     showVehicles.addActionListener(e -> {
       ((CardLayout)frame.getContentPane().getLayout()).show(frame.getContentPane(), "Rental List Screen");
     });
+    showVehicles.setForeground(textColor);
+    showVehicles.setBackground(buttonColor);
+    showVehicles.setBorderPainted(false);
+    showVehicles.setOpaque(true);
+    showVehicles.setFont(showVehicles.getFont().deriveFont(buttonSize));
+
+    showJobs.setForeground(textColor);
+    showJobs.setBackground(buttonColor);
+    showJobs.setBorderPainted(false);
+    showJobs.setOpaque(true);
+    showJobs.setFont(showJobs.getFont().deriveFont(buttonSize));
+    showJobs.setBounds(0, 40, APP_WIDTH, APP_HEIGHT);
+
+
+
 
     buttonPanel.add(showJobs);
     buttonPanel.add(showVehicles);
+    buttonPanel.setBackground(backgroundColor);
 
     mainPanel.add(titlePanel, BorderLayout.NORTH);
     mainPanel.add(jobContainer, BorderLayout.CENTER);
     mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+    mainPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 100, 50));
+    mainPanel.setBounds(0, 0, APP_WIDTH, APP_HEIGHT);
+    mainPanel.setBackground(backgroundColor);
     frame.add(mainPanel, "Job List Screen");
   }
 
@@ -182,21 +242,40 @@ public class Controller {
     JButton showVehicles = new JButton("Show Vehicles");
 
     titlePanel.add(title);
+    titlePanel.setBackground(backgroundColor);
+    //title.setBackground(backgroundColor);
+    title.setFont(title.getFont().deriveFont(textSize));
+
+    
 
     rentalContainer = new JScrollPane(rentalsPanel);
     rentalContainer.setBorder(null);
     rentalContainer.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
+    showVehicles.setForeground(textColor);
+    showVehicles.setBackground(buttonColor);
+    showVehicles.setBorderPainted(false);
+    showVehicles.setOpaque(true);
+    showVehicles.setFont(showVehicles.getFont().deriveFont(buttonSize));
+
+
     showJobs.addActionListener(e -> {
       ((CardLayout)frame.getContentPane().getLayout()).show(frame.getContentPane(), "Job List Screen");
     });
+    showJobs.setForeground(textColor);
+    showJobs.setBackground(buttonColor);
+    showJobs.setBorderPainted(false);
+    showJobs.setOpaque(true);
+    showJobs.setFont(showJobs.getFont().deriveFont(buttonSize));
 
     buttonPanel.add(showJobs);
     buttonPanel.add(showVehicles);
+    buttonPanel.setBackground(backgroundColor);
 
     mainPanel.add(titlePanel, BorderLayout.NORTH);
     mainPanel.add(rentalContainer, BorderLayout.CENTER);
     mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+    mainPanel.setBackground(backgroundColor);
     frame.add(mainPanel, "Rental List Screen");
   }
 
