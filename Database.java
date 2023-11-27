@@ -10,9 +10,8 @@ public class Database {
     static String url = " " ;
     static String username = "root";
     static String password = "password";
-}
 
-public void connectDatabase() {
+    public void connectDatabase() {
     try {
         //declares connection to database
         connection = DriverManager.getConnection(url, username, password);
@@ -24,6 +23,7 @@ public void connectDatabase() {
 
     //public void addVehicle
     //public void addJob
+}
 }
 
 
