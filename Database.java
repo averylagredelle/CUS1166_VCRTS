@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.util.Date;
 
 public class Database {
 
@@ -26,7 +27,10 @@ public class Database {
     //public void addJob
 }
 
-    public void addVehicle(Owner owner, Vehicle vehicle, String timeStamp){
+    public void addVehicle(Owner owner, Vehicle vehicle){
+
+        Date d = new Date();
+        String timeStamp = "Time: " + d;
 
         try{
 
@@ -53,9 +57,12 @@ public class Database {
         }
     }
 
-    public void addJob(Job job, String timeStamp, String jobOwner){
+    public void addJob(Job job, String jobOwner){
 
         String deadline = String.valueOf(job.getDeadline());
+
+        Date d = new Date();
+        String timeStamp = "Time: " + d;
 
         try{
 
