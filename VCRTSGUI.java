@@ -26,6 +26,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 
 /**
  * This is the GUI class that creates the frame that allows car owners and job owners to interact with the Vehicular Cloud System.
@@ -83,9 +84,11 @@ public class VCRTSGUI {
       infoBox.setModalityType(ModalityType.APPLICATION_MODAL);
       infoBox.add(infoBoxMessage, BorderLayout.CENTER);
 
-      backgroundColor = new Color(245, 195, 194);//background color
-      buttonColor = new Color(80,220,160);//button color
-      textColor = new Color(255,255,255);//text color
+      backgroundColor = new Color(245, 205, 205);//background color
+      buttonColor = new Color(130,240,200);//button color
+      textColor = new Color(0,0,0);//text color
+
+
 
       try {
          socket = new Socket("localhost", 1000);
@@ -136,6 +139,7 @@ public class VCRTSGUI {
       explanation.setLineWrap(true);
       explanation.setWrapStyleWord(true);
       explanation.setSize(APP_WIDTH - 50, APP_HEIGHT - 50);
+      explanation.setBackground(backgroundColor);
 
       login.setName(LOGIN_PAGE_NAME);
       login.addActionListener(switcher);
@@ -145,6 +149,12 @@ public class VCRTSGUI {
       login.setBackground(buttonColor);
       login.setBorderPainted(false);
       login.setOpaque(true);
+      login.addMouseListener(new java.awt.event.MouseAdapter() {
+         public void mouseEntered(java.awt.event.MouseEvent evt) {
+             login.setBackground(buttonColor);
+         }
+         public void mouseExited(java.awt.event.MouseEvent evt) {login.setBackground(UIManager.getColor(evt)); }
+    });
 
       signUp.setName(SIGNUP_PAGE_NAME);
       signUp.addActionListener(switcher);
