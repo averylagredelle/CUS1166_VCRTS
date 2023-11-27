@@ -7,7 +7,7 @@ CREATE TABLE Vehicle (
     vehicleMake VARCHAR(100),
     vehicleModel VARCHAR(100),
     vehiclePlate VARCHAR(100),
-    residencyTime INTEGER(100),
+    residencyTime INT,
     timeStamp DATETIME
 );
     
@@ -16,7 +16,7 @@ CREATE TABLE Job	(
     jobTitle VARCHAR(100),
     jobDescription VARCHAR(250),
     jobDeadline VARCHAR(20),
-    jobDuration INTEGER(100),
+    jobDuration INT,
     timeStamp DATETIME
 );
     
