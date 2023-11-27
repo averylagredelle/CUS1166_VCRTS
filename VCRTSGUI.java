@@ -15,7 +15,6 @@ import java.net.Socket;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.awt.Color;
-import java.awt.geom.RoundRectangle2D;
 
 
 import javax.swing.JButton;
@@ -85,7 +84,7 @@ public class VCRTSGUI {
       infoBox.add(infoBoxMessage, BorderLayout.CENTER);
 
       backgroundColor = new Color(245, 195, 194);//background color
-      buttonColor = new Color(124,131,188);//button color
+      buttonColor = new Color(80,220,160);//button color
       textColor = new Color(255,255,255);//text color
 
       try {
