@@ -2,19 +2,23 @@ create database VCRTS;
 
 use VCRTS;
 
-CREATE TABLE Owner	(
-	ownerID VARCHAR(6),
-    vehicleMake VARCHAR(20),
-    vehicleModel VARCHAR(20),
-    vehiclePlate VARCHAR(20),
-    residencyTime DATETIME
-    );
+CREATE TABLE Vehicle (
+	vehicleOwner VARCHAR(100),
+    vehicleMake VARCHAR(100),
+    vehicleModel VARCHAR(100),
+    vehiclePlate VARCHAR(100),
+    residencyTime INTEGER(100),
+    timeStamp DATETIME
+);
     
-CREATE TABLE Client	(
-	clientID VARCHAR(6),
-    jobDuration TIME,
-    jobDeadline DATETIME
-    );
+CREATE TABLE Job	(
+	jobOwner VARCHAR(100),
+    jobTitle VARCHAR(100),
+    jobDescription VARCHAR(250),
+    jobDeadline VARCHAR(20),
+    jobDuration INTEGER(100),
+    timeStamp DATETIME
+);
     
     
     
