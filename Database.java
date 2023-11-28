@@ -57,7 +57,7 @@ public class Database {
         }
     }
 
-    public void addJob(Job job, String jobOwner){
+    public void addJob(Job job){
 
         String deadline = String.valueOf(job.getDeadline());
 
