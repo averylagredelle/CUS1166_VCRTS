@@ -62,8 +62,6 @@ public class VCRTSGUI {
    private float buttonSize = 15;
    private float textSize = 20;
 
-
-
    /**
     * Initializes the GUI of the Vehicular Cloud System.
     */
@@ -82,7 +80,6 @@ public class VCRTSGUI {
       infoBox.setLayout(new BorderLayout());
       infoBox.setSize(300, 200);
       infoBox.setResizable(false);
-      infoBox.setLocation(300, 175);
       infoBox.setModalityType(ModalityType.APPLICATION_MODAL);
       infoBox.add(infoBoxMessage, BorderLayout.CENTER);
 
@@ -104,6 +101,7 @@ public class VCRTSGUI {
       //start application creates screen output
       startApp(); 
       frame.setVisible(true);
+      infoBox.setLocationRelativeTo(frame);
    }
 
    /**

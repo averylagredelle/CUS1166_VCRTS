@@ -8,6 +8,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.awt.Color;
@@ -35,6 +36,7 @@ public class Controller {
 
   private int minutesFromStart;
   private HashMap<Job, Integer> completionTimes;
+  private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
  // GUI components
 
   private JFrame frame = new JFrame();
@@ -56,15 +58,12 @@ public class Controller {
 
 
   public Controller() {
-    jobs = new ArrayList<Job>();
-    vehicles = new ArrayList<Vehicle>();
-    minutesFromStart = 0;
-    completionTimes = new HashMap<Job, Integer>();
     database = new Server();
+    completionTimes = new HashMap<Job, Integer>();
 
-  // Set GUI color scheme 
-    backgroundColor = new Color(245, 205, 205);//background color
-    buttonColor = new Color(130,240,200);//button color
+    // Set GUI color scheme 
+    backgroundColor = new Color(187, 242, 184);//background color
+    buttonColor = new Color(80,192,217);//button color
     textColor = new Color(0,0,0);//text color
 
 
@@ -85,11 +84,16 @@ public class Controller {
     messageBox.setLayout(new GridLayout(5, 1));
     messageBox.setSize(300, 400);
     messageBox.setResizable(false);
-    messageBox.setLocation(900, 175);
     messageBox.setModalityType(ModalityType.APPLICATION_MODAL);
 
     startApp();
     frame.setVisible(true);
+    messageBox.setLocationRelativeTo(frame);
+    jobs = database.getJobs(completionTimes);
+    minutesFromStart = completionTimes.get(jobs.get(jobs.size() - 1));
+    updateJobsPanel();
+    vehicles = database.getVehicles();
+    updateRentalsPanel();
 
     try{
       serverSocket = new ServerSocket(1000);
@@ -246,8 +250,6 @@ public class Controller {
     mainPanel.add(titlePanel, BorderLayout.NORTH);
     mainPanel.add(jobContainer, BorderLayout.CENTER);
     mainPanel.add(buttonPanel, BorderLayout.SOUTH);
-    mainPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 100, 50));
-    mainPanel.setBounds(0, 0, APP_WIDTH, APP_HEIGHT);
     mainPanel.setBackground(backgroundColor);
     frame.add(mainPanel, "Job List Screen");
   }
@@ -334,7 +336,7 @@ public class Controller {
       rentalsPanel.add(new JLabel("                               Model: " + vehicles.get(i).getModel()));
       rentalsPanel.add(new JLabel("                               License Plate Number: " + vehicles.get(i).getLicensePlateNumber()));
       rentalsPanel.add(new JLabel("                               Residency: " + vehicles.get(i).getResidency() + " days"));
-      rentalsPanel.add(new JLabel("                               Vehicle Arrival Time: " + vehicles.get(i).getArrivalTime()));
+      rentalsPanel.add(new JLabel("                               Vehicle Arrival Time: " + formatter.format(vehicles.get(i).getArrivalTime())));
       rentalsPanel.add(new JLabel("                               Vehicle Owner: " + vehicles.get(i).getVehicleOwner()));
     }
     frame.validate();

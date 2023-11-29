@@ -3,8 +3,11 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * This class represents the server of the Vehicular Cloud System. It saves all the information entered in the GUI onto a 
@@ -29,7 +32,7 @@ public class Server {
     private String username = "root";
     private String password = "NewYork2003!";
     
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-DD HH:mm:ss");
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     /**
      * Initializes a new Server object.
@@ -270,6 +273,70 @@ public class Server {
         return updateDatabase(addVehicleStatement, "An error occurred while trying to add rental " + v.getLicensePlateNumber() + " to the database");
     }
 
+    public ArrayList<Job> getJobs(HashMap<Job, Integer> completionTimes) {
+        int minutesFromStart = 0;
+        ArrayList<Job> allJobs = new ArrayList<Job>();
+        String getJobsRequest = "SELECT * FROM vcrts.job";
+
+        try {
+            ResultSet resultSet = queryDatabase(getJobsRequest, "An error occurred while trying to fetch all jobs from the database");
+            while(resultSet.next()) {
+                String jobOwner = resultSet.getString("jobOwner");
+                String jobTitle = resultSet.getString("jobTitle");
+                String jobDescription = resultSet.getString("jobDescription");
+                LocalDate jobDeadline = LocalDate.parse(resultSet.getString("jobDeadline"));
+                int jobDuration = resultSet.getInt("jobDuration");
+
+                Job newJob = new Job(jobTitle, jobDescription, jobDuration, jobDeadline);
+                newJob.setJobOwner(jobOwner);
+                completionTimes.put(newJob, minutesFromStart + newJob.getDurationTime());
+                minutesFromStart = minutesFromStart + newJob.getDurationTime();
+                allJobs.add(newJob);
+            }
+            return allJobs;
+        }
+        catch(SQLException e) {
+            System.out.println("A SQL exception occurred while trying to get the jobs from the result set");
+            return null;
+        }
+        catch(NullPointerException e) {
+            System.out.println("Could not get all jobs from the database because the result set was null");
+            return null;
+        }
+    }
+
+    public ArrayList<Vehicle> getVehicles() {
+        ArrayList<Vehicle> allVehicles = new ArrayList<Vehicle>();
+        String getVehiclesRequest = "SELECT * FROM vcrts.vehicle";
+
+        try {
+            ResultSet resultSet = queryDatabase(getVehiclesRequest, "An error occurred while trying to fetch all vehicles from the database");
+            while(resultSet.next()) {
+                String vehicleOwner = resultSet.getString("vehicleOwner");
+                String make = resultSet.getString("vehicleMake");
+                String model = resultSet.getString("vehicleModel");
+                String licencePlateNumber = resultSet.getString("vehiclePlate");
+                int residency = resultSet.getInt("residencyTime");
+                LocalDateTime arrivalTime = LocalDateTime.parse(resultSet.getString("arrivalTime"), formatter);
+
+                Vehicle newCar = new Vehicle(make, model, licencePlateNumber, residency);
+                newCar.setVehicleOwner(vehicleOwner);
+                newCar.setArrivalTime(arrivalTime);
+
+                allVehicles.add(newCar);
+            }
+            return allVehicles;
+        }
+        catch(SQLException e) {
+            System.out.println("A SQL exception occurred while trying to get the vehicles from the result set");
+            return null;
+        }
+        catch(NullPointerException e) {
+            System.out.println("Could not get all vehicles from the database because the result set was null");
+            return null;
+        }
+    }
+
     public ResultSet queryDatabase(String query, String errorMessage) {
         try{
             Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
@@ -307,6 +374,7 @@ public class Server {
         }
         catch(SQLException e) {
             System.out.println(errorMessage);
+            System.out.println(e.getMessage());
             return false;
         }
     }
