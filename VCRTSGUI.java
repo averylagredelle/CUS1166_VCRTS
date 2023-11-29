@@ -223,6 +223,12 @@ public class VCRTSGUI {
       back.setBackground(buttonColor);
       back.setForeground(textColor);
       pageSwitchButtons.add(back);
+      back.setFont(back.getFont().deriveFont(buttonSize));
+
+      message.setFont(message.getFont().deriveFont(textSize));
+      usernameLabel.setFont(usernameLabel.getFont().deriveFont(textSize));
+      passwordLabel.setFont(passwordLabel.getFont().deriveFont(textSize));
+
 
 
       loginPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 100, 50));
@@ -275,15 +281,24 @@ public class VCRTSGUI {
       signup.addActionListener(verifier);
       signup.setBackground(buttonColor);
       signup.setForeground(textColor);
+      signup.setFont(signup.getFont().deriveFont(buttonSize));
+
  
       back.setName(INTRO_PAGE_NAME);
       back.addActionListener(switcher);
       back.setBackground(buttonColor);
       back.setForeground(textColor);
       pageSwitchButtons.add(back);
+      back.setFont(back.getFont().deriveFont(buttonSize));
+
       
       signUpPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 100, 50));
       signUpPanel.setBackground(backgroundColor);
+
+      header.setFont(header.getFont().deriveFont(textSize));
+      usernameLabel.setFont(usernameLabel.getFont().deriveFont(textSize));
+      passwordLabel.setFont(passwordLabel.getFont().deriveFont(textSize));
+
 
       signUpPanel.add(header);
       signUpPanel.add(usernameSubpanel);
