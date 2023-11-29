@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 
 public class Client extends User {
 
@@ -26,9 +25,9 @@ public class Client extends User {
 
   public String getQueuedJobs() {
     StringBuilder allJobs = new StringBuilder();
-    for (Job job : requestedJobs) {
-      allJobs.append(job.toString());
-    }
+    // for (Job job : requestedJobs) {
+    //   allJobs.append(job.toString());
+    // }
     return allJobs.toString();
   }
 

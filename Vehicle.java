@@ -1,12 +1,12 @@
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class Vehicle {
     private String make;
     private String model;
     private String licensePlateNumber;
     private int residency;
-    private Date arrivalTime;
-    private Date departureTime;
+    private LocalDateTime arrivalTime;
+    private LocalDateTime departureTime;
     private String vehicleOwner;
     private String computationState;
 
@@ -57,19 +57,19 @@ public class Vehicle {
         this.residency = residency;
     }
 
-    public Date getArrivalTime() {
+    public LocalDateTime getArrivalTime() {
         return arrivalTime;
     }
 
-    public void setArrivalTime(Date arrivalTime) {
+    public void setArrivalTime(LocalDateTime arrivalTime) {
         this.arrivalTime = arrivalTime;
     }
 
-    public Date getDepartureTime() {
+    public LocalDateTime getDepartureTime() {
         return departureTime;
     }
 
-    public void setDepartureTime(Date departureTime) {
+    public void setDepartureTime(LocalDateTime departureTime) {
         this.departureTime = departureTime;
     }
 

@@ -9,7 +9,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.awt.Color;
 
@@ -313,7 +312,7 @@ public class Controller {
       jobsPanel.add(new JLabel("                               Description: " + this.jobs.get(i).getDescription()));
       jobsPanel.add(new JLabel("                               Duration Time: " + this.jobs.get(i).getDurationTime() + " minutes"));
       jobsPanel.add(new JLabel("                               Deadline: " + this.jobs.get(i).getDeadline()));
-      jobsPanel.add(new JLabel("                               Job Owner: " + this.jobs.get(i).getJobOwner().getUsername()));
+      jobsPanel.add(new JLabel("                               Job Owner: " + this.jobs.get(i).getJobOwner()));
       jobsPanel.add(new JLabel("                               Time Completed: " + completionTimes.get(this.jobs.get(i))));
     }
     JPanel totalTimePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -336,7 +335,7 @@ public class Controller {
       rentalsPanel.add(new JLabel("                               License Plate Number: " + vehicles.get(i).getLicensePlateNumber()));
       rentalsPanel.add(new JLabel("                               Residency: " + vehicles.get(i).getResidency() + " days"));
       rentalsPanel.add(new JLabel("                               Vehicle Arrival Time: " + vehicles.get(i).getArrivalTime()));
-      rentalsPanel.add(new JLabel("                               Vehicle Owner: " + vehicles.get(i).getVehicleOwner().getUsername()));
+      rentalsPanel.add(new JLabel("                               Vehicle Owner: " + vehicles.get(i).getVehicleOwner()));
     }
     frame.validate();
   }
@@ -503,9 +502,7 @@ public class Controller {
           username = paramsList[0];
           password = paramsList[1];
           User newUser = new User(username, password);
-          database.addUser(newUser);
-          database.updateDatabase("New Sign Up", newUser);
-          outputStream.writeBoolean(true);
+          outputStream.writeBoolean(database.addUser(newUser));
           break;
         }
         catch(IOException e) {
@@ -519,9 +516,7 @@ public class Controller {
           String username;
           outputStream.writeUTF("send username");
           username = inputStream.readUTF();
-          User user = database.getUser(username);
-          database.updateDatabase("New Login", user);
-          outputStream.writeBoolean(true);
+          outputStream.writeBoolean(database.recordNewLogin(username));
           break;
         }
         catch(IOException e) {
@@ -548,18 +543,18 @@ public class Controller {
           Client c;
 
           showMessage(job);
-
+          boolean updateSuccessful = false;
           if(acceptChosen) {
             if(!database.isClient(username)){
               database.setUserClient(username);
             }
             c = database.getClient(username);
             c.submitJob(job,this);
-            database.updateDatabase("New Job Submitted", c);
+            updateSuccessful = database.addJob(job);
             updateJobsPanel();
           }
           
-          outputStream.writeBoolean(acceptChosen);
+          outputStream.writeBoolean(acceptChosen && updateSuccessful);
           break;
         }
         catch(IOException e) {
@@ -617,26 +612,18 @@ public class Controller {
           Owner o;
           
           showMessage(vehicle);
-
+          boolean rentalSuccessful = false;
           if(acceptChosen) {
-            if(database.isOwner(username)){
-              o = database.getOwner(username);
-              vehicle.setVehicleOwner(o);
-              vehicle.setArrivalTime(new Date());
-              o.rentVehicle(vehicle,this);
+            if(!database.isOwner(username)){
+              database.setUserOwner(username);
             }
-            else {
-              o = new Owner(database.getUser(username).getUsername(),database.getUser(username).getPassword());
-              database.addOwner(o);
-              vehicle.setVehicleOwner(o);
-              vehicle.setArrivalTime(new Date());
-              o.rentVehicle(vehicle,this);
-            }
-            database.updateDatabase("New Vehice Rented", o); 
+            o = database.getOwner(username);
+            o.rentVehicle(vehicle,this);
+            rentalSuccessful = database.addVehicle(vehicle); 
             updateRentalsPanel();
           }
 
-          outputStream.writeBoolean(acceptChosen);
+          outputStream.writeBoolean(acceptChosen && rentalSuccessful);
           break;
         }
         catch(IOException e) {

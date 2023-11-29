@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 
 public class Owner extends User {
 
@@ -12,6 +12,7 @@ public class Owner extends User {
 
     public void rentVehicle(Vehicle v, Controller c) {
         v.setVehicleOwner(getUsername());
+        v.setArrivalTime(LocalDateTime.now());
         c.addVehicle(v);
     }
 
@@ -24,9 +25,9 @@ public class Owner extends User {
     public String getRentals() {
         String carRentals = "";
         
-        for(Vehicle c: rentals) {
-            carRentals = carRentals.concat(String.valueOf(c));
-        }
+        // for(Vehicle c: rentals) {
+        //     carRentals = carRentals.concat(String.valueOf(c));
+        // }
 
         return carRentals;
     }

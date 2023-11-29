@@ -10,7 +10,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.geom.AffineTransform;
 import java.io.*;
 import java.net.Socket;
 import java.time.LocalDate;
@@ -27,7 +26,6 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.UIManager;
 
 /**
  * This is the GUI class that creates the frame that allows car owners and job owners to interact with the Vehicular Cloud System.

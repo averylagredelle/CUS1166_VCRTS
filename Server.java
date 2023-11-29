@@ -1,15 +1,10 @@
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
-import java.util.Date;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * This class represents the server of the Vehicular Cloud System. It saves all the information entered in the GUI onto a 
@@ -33,6 +28,8 @@ public class Server {
     private String url = "jdbc:mysql://localhost:3306/VCRTS?useTimezone=true&serverTimezone=UTC";
     private String username = "root";
     private String password = "NewYork2003!";
+    
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-DD HH:mm:ss");
 
     /**
      * Initializes a new Server object.
@@ -134,6 +131,31 @@ public class Server {
         }
     }
 
+    public Owner getOwner(String username) {
+        String getOwnerQuery = "SELECT * FROM vcrts.user WHERE username='" + username + "' AND isOwner='true'";
+
+        try {
+            ResultSet resultSet = queryDatabase(getOwnerQuery, "An error occurred while trying to find requested owner.");
+            if(resultSet.first()) {
+                String password = resultSet.getString("userPassword");
+                Owner o = new Owner(username, password);
+                return o;
+            }
+            else {
+                System.out.println("Could not find owner with username " + username);
+                return null;
+            }
+        }
+        catch(SQLException e) {
+            System.out.println("A SQL exception occurred while trying to get the owner " + username);
+            return null;
+        }
+        catch(NullPointerException e) {
+            System.out.println("Could not get owner because result set was null");
+            return null;
+        }
+    }
+
     /**
      * Returns the Owner with the given username. Returns {@code null} if the Owner cannot be located.
      * @param username the username of the desired Owner
@@ -172,21 +194,31 @@ public class Server {
      * @param username the username of the desired User
      * @return the User who has the given 
      */
-    public User getUser(String username) {
-        for (User u : users) {
-            if (u.getUsername().equals(username)) {
-                return u;
-            }
-        }
-        return null;
+    // public User getUser(String username) {
+    //     for (User u : users) {
+    //         if (u.getUsername().equals(username)) {
+    //             return u;
+    //         }
+    //     }
+    //     return null;
+    // }
+
+    public boolean recordNewLogin(String username) {
+        String currentTime = formatter.format(LocalDateTime.now());
+        String recordNewLoginStatement = "UPDATE user SET lastSignIn='" + currentTime + "' WHERE username='" + username + "'";
+
+        return updateDatabase(recordNewLoginStatement, "An error occurred while trying to record new login in database");
     }
 
     /**
      * Adds the given User to the server's list of users who have signed up/logged in to the Vehicular Cloud System.
      * @param thisUser the User to add to the server's list
      */
-    public void addUser(User thisUser) {
-        users.add(thisUser);
+    public boolean addUser(User thisUser) {
+        String currentTime = formatter.format(LocalDateTime.now());
+        String addUserStatement = "INSERT INTO vcrts.user(username,userPassword,dateCreated,lastSignIn) VALUES('" + thisUser.getUsername() + "','" + thisUser.getPassword() + "','" + currentTime + "','" + currentTime + "')";
+
+        return updateDatabase(addUserStatement, "An error occurred while trying to add user " + thisUser.getUsername() + " to database");
     }
 
     /**
@@ -197,19 +229,45 @@ public class Server {
      * @return {@code true} if the username and password belong to an existing user, {@code false} otherwise
      */
     public boolean accountFound(String username, String password) {
-        for (User u : users) {
-            if (u.getUsername().equals(username) && u.getPassword().equals(password))
-                return true;
+        String findAccountQuery = "SELECT * FROM vcrts.user WHERE username='" + username + "' AND userPassword='" + password + "'";
+        try {
+            return queryDatabase(findAccountQuery, "An error occurred while trying to find the account for " + username).first();
         }
-        return false;
+        catch(SQLException e) {
+            System.out.println("Could not access the account for " + username + " in the database");
+            return false;
+        }
+        catch(NullPointerException e) {
+            System.out.println("Could not verify account because result set was null");
+            return false;
+        }
     }
 
     /**
      * Transfers the given job to the server's database.
      * @param job the Job to be transferred
      */
-    public void transferCompletedJob(Job job) {
-        completedJobs.add(job);
+    public void setJobCompleted(Job job) {
+        //completedJobs.add(job);
+
+        String setJobCompletedStatement = "UPDATE vcrts.job SET completed='true' WHERE jobOwner='" + job.getJobOwner() + "' AND jobTitle='" + job.getTitle() + "' AND jobDescription='" + job.getDescription() + "'";
+        if(!updateDatabase(setJobCompletedStatement, "An error occurred while trying to set job completed")) {
+            System.out.println("Failed to set job completed");
+        }
+    }
+
+    public boolean addJob(Job j) {
+        String dateRequested = formatter.format(LocalDateTime.now());
+        String addJobStatement = "INSERT INTO vcrts.job VALUES('" + j.getJobOwner() + "','" + j.getTitle() + "','" + j.getDescription() + "','" + j.getDeadline() + "'," + j.getDurationTime() + ",'false','" + dateRequested + "')";
+
+        return updateDatabase(addJobStatement, "An error occurred while trying to add the " + j.getTitle() + " job to the database");
+    }
+
+    public boolean addVehicle(Vehicle v) {
+        String arrivalTime = formatter.format(v.getArrivalTime());
+        String addVehicleStatement = "INSERT INTO vcrts.vehicle VALUES('" + v.getVehicleOwner() + "','" + v.getMake() + "','" + v.getModel() + "','" + v.getLicensePlateNumber() + "'," + v.getResidency() + ",'" + arrivalTime + "')";
+
+        return updateDatabase(addVehicleStatement, "An error occurred while trying to add rental " + v.getLicensePlateNumber() + " to the database");
     }
 
     public ResultSet queryDatabase(String query, String errorMessage) {
