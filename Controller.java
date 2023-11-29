@@ -270,8 +270,6 @@ public class Controller {
     //title.setBackground(backgroundColor);
     title.setFont(title.getFont().deriveFont(textSize));
 
-    //add cats
-
     rentalContainer = new JScrollPane(rentalsPanel);
     rentalContainer.setBorder(null);
     rentalContainer.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
