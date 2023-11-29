@@ -15,18 +15,6 @@ import java.util.HashMap;
  * @author Software Engineering Capstone Project Group 1
  */
 public class Server {
-    // // File for storing data
-    // private File database = new File("Database.txt");
-
-    // // String to store data
-    // private String data;
-
-    // // Lists of users, clients, owners, and completed jobs
-    // private ArrayList<User> users;
-    // private ArrayList<Client> clients;
-    // private ArrayList<Owner> owners;
-    // private ArrayList<Job> completedJobs;
-
     private Connection connection = null;
     private String url = "jdbc:mysql://localhost:3306/VCRTS?useTimezone=true&serverTimezone=UTC";
     private String username = "root";
