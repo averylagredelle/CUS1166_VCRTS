@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.awt.Color;
 
-
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -34,14 +33,14 @@ public class Controller {
   private static DataOutputStream outputStream;
   private static boolean controllerConnectionOn = true;
 
-  private int minutesFromStart;
+  private int minutesFromStart = 0;
   private HashMap<Job, Integer> completionTimes;
   private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
  // GUI components
 
   private JFrame frame = new JFrame();
-  private JPanel jobsPanel = new JPanel(new GridLayout());
-  private JPanel rentalsPanel = new JPanel(new GridLayout());
+  private JPanel jobsPanel = new JPanel(new GridLayout(0, 1));
+  private JPanel rentalsPanel = new JPanel(new GridLayout(0, 1));
   private JDialog messageBox = new JDialog();
   private boolean acceptChosen = false;
   private final int APP_WIDTH = 480;
@@ -76,9 +75,7 @@ public class Controller {
     frame.setTitle("Vehicular Cloud Real Time Controller");
     frame.setSize(APP_WIDTH, APP_HEIGHT);
     frame.setResizable(false);
-    frame.setLocation(850, 100);
-
-    
+    frame.setLocation(850, 100);    
 
     messageBox.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
     messageBox.setLayout(new GridLayout(5, 1));
@@ -90,7 +87,9 @@ public class Controller {
     frame.setVisible(true);
     messageBox.setLocationRelativeTo(frame);
     jobs = database.getJobs(completionTimes);
-    minutesFromStart = completionTimes.get(jobs.get(jobs.size() - 1));
+    if(completionTimes.size() > 0) {
+      minutesFromStart = completionTimes.get(jobs.get(jobs.size() - 1));
+    }
     updateJobsPanel();
     vehicles = database.getVehicles();
     updateRentalsPanel();
@@ -271,7 +270,7 @@ public class Controller {
     //title.setBackground(backgroundColor);
     title.setFont(title.getFont().deriveFont(textSize));
 
-    
+    //add cats
 
     rentalContainer = new JScrollPane(rentalsPanel);
     rentalContainer.setBorder(null);

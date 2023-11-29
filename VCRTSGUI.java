@@ -13,6 +13,7 @@ import java.awt.event.KeyListener;
 import java.io.*;
 import java.net.Socket;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.awt.Color;
 
@@ -831,23 +832,38 @@ public class VCRTSGUI {
             }
 
             String deadline = year + "-" + month + "-" + day;
-            this.setDeadline(LocalDate.parse(deadline));
+            boolean dateIsValid = true;
+            try {
+               this.setDeadline(LocalDate.parse(deadline));
+               dateIsValid = true;
+            }
+            catch(DateTimeParseException d) {
+               dateIsValid = false;
+               infoBoxMessage.setText("An error occurred with the date you entered.");
+               infoBox.setVisible(true);
+            }
 
-            if(((JButton)e.getSource()).getName().equals("Calculate Job Time")) {
+            if(((JButton)e.getSource()).getName().equals("Calculate Job Time") && dateIsValid) {
                jobTimeCompletionChecked = true;
                infoBoxMessage.setText("Completion Time: " + getJobCompletionTime(new Job(this.getTitle(), this.getDescription(), this.getDurationTime(), this.getDeadline())) + " minutes from app start");
                infoBox.setVisible(true);
             }
             else {
                jobTimeCompletionChecked = false;
-               if(sendJobRequest(this.getTitle(), this.getDescription(), this.getDurationTime(), this.getDeadline().toString(), currentUser.getUsername())) {
-                  clearFields();
-                  infoBoxMessage.setText("Job submitted successfully!");
-                  infoBox.setVisible(true);
+               if(dateIsValid) {
+                  if(sendJobRequest(this.getTitle(), this.getDescription(), this.getDurationTime(), this.getDeadline().toString(), currentUser.getUsername())) {
+                     clearFields();
+                     infoBoxMessage.setText("Job submitted successfully!");
+                     infoBox.setVisible(true);
+                  }
+                  else {
+                     attemptedSubmit = true;
+                     infoBoxMessage.setText("Job was rejected by VC Controller.");
+                     infoBox.setVisible(true);
+                  }
                }
                else {
-                  attemptedSubmit = true;
-                  infoBoxMessage.setText("Job was rejected by VC Controller.");
+                  infoBoxMessage.setText("There is a problem with the date you entered.");
                   infoBox.setVisible(true);
                }
             }
@@ -968,7 +984,6 @@ public class VCRTSGUI {
          this.setDurationTime(0);
          this.setDeadline(LocalDate.parse("2000-01-01"));
          attemptedSubmit = false;
-         System.out.println("Fields cleared");
       }
    }
 
