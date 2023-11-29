@@ -36,6 +36,7 @@ public class Controller {
 
   private int minutesFromStart;
   private HashMap<Job, Integer> completionTimes;
+ // GUI components
 
   private JFrame frame = new JFrame();
   private JPanel jobsPanel = new JPanel(new GridLayout());
@@ -49,6 +50,10 @@ public class Controller {
   private Color textColor;
   private float buttonSize = 15;
   private float textSize = 20;
+  /**
+     * Controller class constructor. initializes and configures data structures
+     * the graphical user interface with predetermined dimensions and colors.
+     */
 
 
   public Controller() {
@@ -58,6 +63,7 @@ public class Controller {
     completionTimes = new HashMap<Job, Integer>();
     database = new Server();
 
+  // Set GUI color scheme 
     backgroundColor = new Color(245, 205, 205);//background color
       buttonColor = new Color(130,240,200);//button color
       textColor = new Color(0,0,0);//text color
@@ -112,28 +118,41 @@ public class Controller {
   public static void main(String[] args) {
     new Controller();
   }
-
-  public void startApp() {
-    createIntroScreen();
-    createJobsListScreen();
-    createRentalsListScreen();
+ /**
+  * Starts the Vehicular Cloud Real Time Controller application by creating and displaying
+  * the introductory screen, jobs list screen, and rentals list screen.
+  */
+  public void startApp() { 
+    createIntroScreen(); // Create and display the introductory screen
+    createJobsListScreen();  // Create and display the jobs list screen
+    createRentalsListScreen(); // Create and display the rentals list screen
   }
-
+  /**
+ * Creates the introductory screen with a welcome message, system description, and
+ * buttons to show jobs and vehicles.
+ */
   public void createIntroScreen() {
+    // Set up the main panel with a centered flow layout
     JPanel mainPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    // Set up the text panel with a border layout and vertical gap
     JPanel textPanel = new JPanel(new BorderLayout(0, 50));
+    // Set up the title panel with a centered flow layout
     JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
     JLabel title = new JLabel("Welcome to the Controller for the Vehicular Cloud Real Time System");
+    // Set up the description panel with a border layout
     JPanel descriptionPanel = new JPanel(new BorderLayout());
     JTextArea description = new JTextArea("On this page, you are able to view jobs that have been submitted to the vehicular cloud system with their completion times. You can also see how many vehicles are currently in the VC System. To begin, press \"Show Jobs\" or \"Show Vehicles\" below.");
+    // Set up the button panel with a centered flow layout and horizontal gap
     JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 100, 50));
     JButton showJobs = new JButton("Show Jobs");
     JButton showVehicles = new JButton("Show Vehicles");
 
+   // Set up the title panel by adding the title label and configuring its background color 
     titlePanel.add(title);
     titlePanel.setBackground(backgroundColor);
     title.setBackground(backgroundColor);
 
+    // Configure settings for the description text area
     description.setLineWrap(true);
     description.setWrapStyleWord(true);
     description.setEditable(false);
@@ -143,7 +162,7 @@ public class Controller {
     description.setFont(description.getFont().deriveFont(textSize));
 
 
-
+    // Set the size and add the description text area to the description panel
     descriptionPanel.setSize(APP_WIDTH, 100);
     descriptionPanel.add(description);
     descriptionPanel.setBackground(backgroundColor);
@@ -181,7 +200,9 @@ public class Controller {
 
     frame.add(mainPanel, "Intro Screen");
   }
-
+  /**
+ * Creates the jobs list screen with a title, job container, and buttons to show jobs and vehicles.
+ */
   public void createJobsListScreen() {
     JPanel mainPanel = new JPanel(new BorderLayout());
     JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -232,6 +253,9 @@ public class Controller {
     frame.add(mainPanel, "Job List Screen");
   }
 
+  /**
+ * Creates the rentals list screen with a title, rental container, and buttons to show jobs and vehicles.
+ */
   public void createRentalsListScreen() {
     JPanel mainPanel = new JPanel(new BorderLayout());
     JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -297,7 +321,10 @@ public class Controller {
     jobsPanel.add(totalTimePanel);
     frame.validate();
   }
-
+ /**
+ * Updates the jobs panel with information about each job, including title, description,
+ * duration time, deadline, job owner, and time completed. It also displays the total run time.
+ */
   public void updateRentalsPanel() {
     rentalsPanel.removeAll();
     ((GridLayout)rentalsPanel.getLayout()).setRows(vehicles.size() * 7);
@@ -313,7 +340,13 @@ public class Controller {
     }
     frame.validate();
   }
-
+  /**
+ * Displays a message in a dialog box regarding an incoming job submission request.
+ * The message includes details such as job title, description, and duration time,
+ * and provides options to accept or reject the job.
+ * 
+ * The Job object representing the incoming job submission request.
+ */
   public void showMessage(Job j) {
     messageBox.getContentPane().removeAll();
     JLabel row1 = new JLabel("             Incoming Job Submission Request");
@@ -347,6 +380,13 @@ public class Controller {
     messageBox.setVisible(true);
   }
 
+  /**
+ * Displays a message in a dialog box regarding an incoming vehicle rental request.
+ * The message includes details such as vehicle make, model, and residency time,
+ * and provides options to accept or reject the vehicle rental.
+ * 
+ * The Vehicle object representing the incoming vehicle rental request.
+ */
   public void showMessage(Vehicle v) {
     messageBox.getContentPane().removeAll();
     JLabel row1 = new JLabel("             Incoming Vehicle Rental Request");
