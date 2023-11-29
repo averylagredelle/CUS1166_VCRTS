@@ -1,20 +1,17 @@
 import java.util.ArrayList;
 
 public class Client extends User {
-  private ArrayList<Job> requestedJobs;
 
   public Client(String username, String password) {
     super(username, password);
-    requestedJobs = new ArrayList<Job>();
   }
 
   public Client(String username, String password, String name, String email, String phoneNumber) {
     super(username, password, name, email, phoneNumber);
-    requestedJobs = new ArrayList<Job>();
   }
 
   public void submitJob(Job j, Controller c) {
-    requestedJobs.add(j);
+    j.setJobOwner(getUsername());
     c.assignJob(j);
     //c.processJob(j); // You can add logic here to process the job using the provided controller.
   }

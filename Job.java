@@ -6,7 +6,7 @@ public class Job {
     private String description;
     private int durationTime;
     private LocalDate deadline;
-    private Client jobOwner;
+    private String jobOwner;
 
     public Job() {
         this.title = "";
@@ -63,11 +63,11 @@ public class Job {
         this.inProgress = inProgress;
     }
 
-    public Client getJobOwner() { /* user who requested the job */
+    public String getJobOwner() { /* user who requested the job */
         return jobOwner;
     }
 
-    public void setJobOwner(Client jobOwner) {
+    public void setJobOwner(String jobOwner) {
         this.jobOwner = jobOwner;
     }
 

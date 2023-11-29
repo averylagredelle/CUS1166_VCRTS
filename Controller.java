@@ -59,8 +59,8 @@ public class Controller {
     database = new Server();
 
     backgroundColor = new Color(245, 205, 205);//background color
-      buttonColor = new Color(130,240,200);//button color
-      textColor = new Color(0,0,0);//text color
+    buttonColor = new Color(130,240,200);//button color
+    textColor = new Color(0,0,0);//text color
 
 
     //completed jobs output
@@ -510,17 +510,11 @@ public class Controller {
           showMessage(job);
 
           if(acceptChosen) {
-            if(database.isClient(username)){
-              c = database.getClient(username);
-              job.setJobOwner(c);
-              c.submitJob(job,this);
+            if(!database.isClient(username)){
+              database.setUserClient(username);
             }
-            else {
-              c = new Client(database.getUser(username).getUsername(),database.getUser(username).getPassword());
-              job.setJobOwner(c);
-              database.addClient(c);
-              c.submitJob(job,this);
-            }
+            c = database.getClient(username);
+            c.submitJob(job,this);
             database.updateDatabase("New Job Submitted", c);
             updateJobsPanel();
           }

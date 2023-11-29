@@ -1,26 +1,24 @@
 import java.util.ArrayList;
 
 public class Owner extends User {
-    private ArrayList<Vehicle> rentals;
 
     public Owner(String username, String password, String name, String email, String phoneNumber) {
         super(username, password, name, email, phoneNumber);
-        rentals = new ArrayList<Vehicle>();
     }
 
     public Owner(String username, String password) {
         super(username, password);
-        rentals = new ArrayList<Vehicle>();
     }
 
     public void rentVehicle(Vehicle v, Controller c) {
-        rentals.add(v);
+        v.setVehicleOwner(getUsername());
         c.addVehicle(v);
     }
 
     public void removeVehicle(Vehicle v, Controller c) {
-        rentals.remove(v);
-        c.removeVehicle(v);
+        if(v.getVehicleOwner().equals(getUsername())) {
+            c.removeVehicle(v);
+        }
     }
 
     public String getRentals() {

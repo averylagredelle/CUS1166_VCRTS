@@ -7,7 +7,7 @@ public class Vehicle {
     private int residency;
     private Date arrivalTime;
     private Date departureTime;
-    private Owner vehicleOwner;
+    private String vehicleOwner;
     private String computationState;
 
     public Vehicle() {
@@ -73,11 +73,11 @@ public class Vehicle {
         this.departureTime = departureTime;
     }
 
-    public Owner getVehicleOwner() {
+    public String getVehicleOwner() {
         return vehicleOwner;
     }
 
-    public void setVehicleOwner(Owner vehicleOwner) {
+    public void setVehicleOwner(String vehicleOwner) {
         this.vehicleOwner = vehicleOwner;
     }
     
