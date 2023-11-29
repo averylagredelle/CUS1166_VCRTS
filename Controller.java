@@ -61,9 +61,9 @@ public class Controller {
     completionTimes = new HashMap<Job, Integer>();
 
     // Set GUI color scheme 
-    backgroundColor = new Color(187, 242, 184);//background color
+    backgroundColor = new Color(102,255,102);//background color
     buttonColor = new Color(80,192,217);//button color
-    textColor = new Color(0,0,0);//text color
+    textColor = new Color(0,0,0);//text color 
 
 
     //completed jobs output
