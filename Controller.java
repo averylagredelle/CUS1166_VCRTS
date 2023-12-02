@@ -46,10 +46,12 @@ public class Controller {
   private final int APP_WIDTH = 480;
   private final int APP_HEIGHT = 600;
   private Color backgroundColor;
-  private Color buttonColor;
+  private Color jobsbuttonColor;
+  private Color vehiclebuttonColor;
   private Color textColor;
   private float buttonSize = 15;
   private float textSize = 20;
+  private Color newbackgroundcolor;
   /**
      * Controller class constructor. initializes and configures data structures
      * the graphical user interface with predetermined dimensions and colors.
@@ -61,8 +63,10 @@ public class Controller {
     completionTimes = new HashMap<Job, Integer>();
 
     // Set GUI color scheme 
-    backgroundColor = new Color(157,235,145);//background color
-    buttonColor = new Color(80,192,217);//button color
+    //backgroundColor = new Color(157,235,145);//background 
+    newbackgroundcolor = new Color(234,250,240);//new gray back ground color
+    jobsbuttonColor = new Color(80,192,217);//button color
+    vehiclebuttonColor = new Color(255, 80,70);
     textColor = new Color(0,0,0);//text color 
 
 
@@ -151,8 +155,9 @@ public class Controller {
 
    // Set up the title panel by adding the title label and configuring its background color 
     titlePanel.add(title);
-    titlePanel.setBackground(backgroundColor);
-    title.setBackground(backgroundColor);
+    titlePanel.setBackground(newbackgroundcolor);
+    title.setBackground(newbackgroundcolor);
+    title.setFont(title.getFont().deriveFont(14));;
 
     // Configure settings for the description text area
     description.setLineWrap(true);
@@ -160,29 +165,29 @@ public class Controller {
     description.setEditable(false);
     description.setMinimumSize(new Dimension(APP_WIDTH - 50, 200));
     description.setFocusable(false);
-    description.setBackground(backgroundColor);
+    description.setBackground(newbackgroundcolor);
     description.setFont(description.getFont().deriveFont(textSize));
 
 
     // Set the size and add the description text area to the description panel
     descriptionPanel.setSize(APP_WIDTH, 100);
     descriptionPanel.add(description);
-    descriptionPanel.setBackground(backgroundColor);
+    descriptionPanel.setBackground(newbackgroundcolor);
 
     textPanel.add(titlePanel, BorderLayout.NORTH);
     textPanel.add(descriptionPanel, BorderLayout.CENTER);
-    textPanel.setBackground(backgroundColor);
+    textPanel.setBackground(newbackgroundcolor);
 
 
     buttonPanel.add(showJobs);
     buttonPanel.add(showVehicles);
-    buttonPanel.setBackground(backgroundColor);;
+    buttonPanel.setBackground(newbackgroundcolor);;
 
     showJobs.addActionListener(e -> {
       ((CardLayout)frame.getContentPane().getLayout()).show(frame.getContentPane(), "Job List Screen");
     });
     showJobs.setForeground(textColor);
-    showJobs.setBackground(buttonColor);
+    showJobs.setBackground(jobsbuttonColor);
     showJobs.setBorderPainted(false);
     showJobs.setOpaque(true);
     showJobs.setFont(showJobs.getFont().deriveFont(buttonSize));
@@ -191,14 +196,14 @@ public class Controller {
       ((CardLayout)frame.getContentPane().getLayout()).show(frame.getContentPane(), "Rental List Screen");
     });
     showVehicles.setForeground(textColor);
-    showVehicles.setBackground(buttonColor);
+    showVehicles.setBackground(vehiclebuttonColor);
     showVehicles.setBorderPainted(false);
     showVehicles.setOpaque(true);
     showVehicles.setFont(showVehicles.getFont().deriveFont(buttonSize));
 
     mainPanel.add(textPanel);
     mainPanel.add(buttonPanel);
-    mainPanel.setBackground(backgroundColor);
+    mainPanel.setBackground(newbackgroundcolor);
 
     frame.add(mainPanel, "Intro Screen");
   }
@@ -215,7 +220,7 @@ public class Controller {
     JButton showVehicles = new JButton("Show Vehicles");
 
     titlePanel.add(title);
-    titlePanel.setBackground(backgroundColor);
+    titlePanel.setBackground(newbackgroundcolor);
     title.setFont(title.getFont().deriveFont(textSize));
 
 
@@ -227,13 +232,13 @@ public class Controller {
       ((CardLayout)frame.getContentPane().getLayout()).show(frame.getContentPane(), "Rental List Screen");
     });
     showVehicles.setForeground(textColor);
-    showVehicles.setBackground(buttonColor);
+    showVehicles.setBackground(vehiclebuttonColor);
     showVehicles.setBorderPainted(false);
     showVehicles.setOpaque(true);
     showVehicles.setFont(showVehicles.getFont().deriveFont(buttonSize));
 
     showJobs.setForeground(textColor);
-    showJobs.setBackground(buttonColor);
+    showJobs.setBackground(jobsbuttonColor);
     showJobs.setBorderPainted(false);
     showJobs.setOpaque(true);
     showJobs.setFont(showJobs.getFont().deriveFont(buttonSize));
@@ -244,7 +249,7 @@ public class Controller {
 
     buttonPanel.add(showJobs);
     buttonPanel.add(showVehicles);
-    buttonPanel.setBackground(backgroundColor);
+    buttonPanel.setBackground(newbackgroundcolor);
 
     mainPanel.add(titlePanel, BorderLayout.NORTH);
     mainPanel.add(jobContainer, BorderLayout.CENTER);
@@ -275,7 +280,7 @@ public class Controller {
     rentalContainer.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
     showVehicles.setForeground(textColor);
-    showVehicles.setBackground(buttonColor);
+    showVehicles.setBackground(vehiclebuttonColor);
     showVehicles.setBorderPainted(false);
     showVehicles.setOpaque(true);
     showVehicles.setFont(showVehicles.getFont().deriveFont(buttonSize));
@@ -285,19 +290,19 @@ public class Controller {
       ((CardLayout)frame.getContentPane().getLayout()).show(frame.getContentPane(), "Job List Screen");
     });
     showJobs.setForeground(textColor);
-    showJobs.setBackground(buttonColor);
+    showJobs.setBackground(jobsbuttonColor);
     showJobs.setBorderPainted(false);
     showJobs.setOpaque(true);
     showJobs.setFont(showJobs.getFont().deriveFont(buttonSize));
 
     buttonPanel.add(showJobs);
     buttonPanel.add(showVehicles);
-    buttonPanel.setBackground(backgroundColor);
+    buttonPanel.setBackground(newbackgroundcolor);
 
     mainPanel.add(titlePanel, BorderLayout.NORTH);
     mainPanel.add(rentalContainer, BorderLayout.CENTER);
     mainPanel.add(buttonPanel, BorderLayout.SOUTH);
-    mainPanel.setBackground(backgroundColor);
+    mainPanel.setBackground(newbackgroundcolor);
     frame.add(mainPanel, "Rental List Screen");
   }
 
@@ -386,13 +391,17 @@ public class Controller {
  * The Vehicle object representing the incoming vehicle rental request.
  */
   public void showMessage(Vehicle v) {
+    
     messageBox.getContentPane().removeAll();
     JLabel row1 = new JLabel("             Incoming Vehicle Rental Request");
     JLabel row2 = new JLabel("             Vehicle Make: " + v.getMake());
     JLabel row3 = new JLabel("             Vehicle Model: " + v.getModel());
     JLabel row4 = new JLabel("             Vehicle Residency Time: " + v.getResidency() + " days");
     JPanel row5 = new JPanel(new FlowLayout(FlowLayout.CENTER));
-
+    final Color acceptbuttonColor;
+    final Color rejectbuttonColor;
+    acceptbuttonColor = new Color(160,247,139);//accept color 
+    rejectbuttonColor  = new Color(250,55,58);//reject color 
     JButton accept = new JButton("Accept");
     JButton reject = new JButton("Reject");
 
@@ -405,6 +414,10 @@ public class Controller {
       acceptChosen = false;
       messageBox.dispose();
     });
+
+    accept.setBackground(acceptbuttonColor);
+    reject.setBackground(rejectbuttonColor);
+
 
     row5.add(accept);
     row5.add(reject);
