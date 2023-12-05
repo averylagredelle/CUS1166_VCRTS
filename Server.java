@@ -18,7 +18,7 @@ public class Server {
     private Connection connection = null;
     private String url = "jdbc:mysql://localhost:3306/VCRTS?useTimezone=true&serverTimezone=UTC";
     private String username = "root";
-    private String password = "NewYork2003!";
+    private String password = "P@tel1927";
     
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
@@ -289,7 +289,7 @@ public class Server {
         }
         catch(NullPointerException e) {
             System.out.println("Could not get all jobs from the database because the result set was null");
-            return null;
+            return allJobs;
         }
     }
 
@@ -321,7 +321,7 @@ public class Server {
         }
         catch(NullPointerException e) {
             System.out.println("Could not get all vehicles from the database because the result set was null");
-            return null;
+            return allVehicles;
         }
     }
 
