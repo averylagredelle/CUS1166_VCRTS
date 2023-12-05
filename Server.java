@@ -18,7 +18,7 @@ public class Server {
     private Connection connection = null;
     private String url = "jdbc:mysql://localhost:3306/VCRTS?useTimezone=true&serverTimezone=UTC";
     private String username = "root";
-    private String password = "P@tel1927";
+    private String password = "NewYork2003!";
     
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
