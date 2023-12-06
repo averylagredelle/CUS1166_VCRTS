@@ -2,8 +2,11 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Dialog.ModalityType;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -46,12 +49,14 @@ public class Controller {
   private final int APP_WIDTH = 480;
   private final int APP_HEIGHT = 600;
   private Color backgroundColor;
-  private Color jobsbuttonColor;
-  private Color vehiclebuttonColor;
+  private Color jobsButtonColor;
+  private Color jobsHoverColor;
+  private Color vehicleButtonColor;
+  private Color vehicleHoverColor;
   private Color textColor;
   private float buttonSize = 15;
   private float textSize = 20;
-  private Color newbackgroundcolor;
+  private Color newBackgroundColor;
   /**
      * Controller class constructor. initializes and configures data structures
      * the graphical user interface with predetermined dimensions and colors.
@@ -64,9 +69,11 @@ public class Controller {
 
     // Set GUI color scheme 
     //backgroundColor = new Color(157,235,145);//background 
-    newbackgroundcolor = new Color(234,250,240);//new gray back ground color
-    jobsbuttonColor = new Color(80,192,217);//button color
-    vehiclebuttonColor = new Color(255, 80,70);
+    newBackgroundColor = new Color(233,217,250);//new gray back ground color
+    jobsButtonColor = new Color(80,192,217);//button color
+    jobsHoverColor = new Color(62, 155, 176);
+    vehicleButtonColor = new Color(255, 80,70);
+    vehicleHoverColor = new Color(191, 55, 48);
     textColor = new Color(0,0,0);//text color 
 
 
@@ -154,10 +161,10 @@ public class Controller {
     JButton showVehicles = new JButton("Show Vehicles");
 
    // Set up the title panel by adding the title label and configuring its background color 
+    title.setBackground(newBackgroundColor);
+    title.setFont(title.getFont().deriveFont(Font.BOLD));
+    titlePanel.setBackground(newBackgroundColor);
     titlePanel.add(title);
-    titlePanel.setBackground(newbackgroundcolor);
-    title.setBackground(newbackgroundcolor);
-    title.setFont(title.getFont().deriveFont(14));;
 
     // Configure settings for the description text area
     description.setLineWrap(true);
@@ -165,45 +172,65 @@ public class Controller {
     description.setEditable(false);
     description.setMinimumSize(new Dimension(APP_WIDTH - 50, 200));
     description.setFocusable(false);
-    description.setBackground(newbackgroundcolor);
+    description.setBackground(newBackgroundColor);
     description.setFont(description.getFont().deriveFont(textSize));
 
 
     // Set the size and add the description text area to the description panel
     descriptionPanel.setSize(APP_WIDTH, 100);
     descriptionPanel.add(description);
-    descriptionPanel.setBackground(newbackgroundcolor);
+    descriptionPanel.setBackground(newBackgroundColor);
 
     textPanel.add(titlePanel, BorderLayout.NORTH);
     textPanel.add(descriptionPanel, BorderLayout.CENTER);
-    textPanel.setBackground(newbackgroundcolor);
+    textPanel.setBackground(newBackgroundColor);
 
 
     buttonPanel.add(showJobs);
     buttonPanel.add(showVehicles);
-    buttonPanel.setBackground(newbackgroundcolor);;
+    buttonPanel.setBackground(newBackgroundColor);;
 
     showJobs.addActionListener(e -> {
       ((CardLayout)frame.getContentPane().getLayout()).show(frame.getContentPane(), "Job List Screen");
     });
+    showJobs.addMouseListener(new MouseAdapter() {
+      public void mouseEntered(MouseEvent e) {
+        ((JButton)e.getSource()).setBackground(jobsHoverColor);
+      }
+
+      public void mouseExited(MouseEvent e) {
+        ((JButton)e.getSource()).setBackground(jobsButtonColor);
+      }
+    });
     showJobs.setForeground(textColor);
-    showJobs.setBackground(jobsbuttonColor);
+    showJobs.setBackground(jobsButtonColor);
     showJobs.setBorderPainted(false);
     showJobs.setOpaque(true);
     showJobs.setFont(showJobs.getFont().deriveFont(buttonSize));
+    showJobs.setFocusable(false);
 
     showVehicles.addActionListener(e -> {
       ((CardLayout)frame.getContentPane().getLayout()).show(frame.getContentPane(), "Rental List Screen");
     });
+    showVehicles.addMouseListener(new MouseAdapter() {
+      public void mouseEntered(MouseEvent e) {
+        ((JButton)e.getSource()).setBackground(vehicleHoverColor);
+      }
+
+      public void mouseExited(MouseEvent e) {
+        ((JButton)e.getSource()).setBackground(vehicleButtonColor);
+      }
+    });
     showVehicles.setForeground(textColor);
-    showVehicles.setBackground(vehiclebuttonColor);
+    showVehicles.setBackground(vehicleButtonColor);
     showVehicles.setBorderPainted(false);
     showVehicles.setOpaque(true);
     showVehicles.setFont(showVehicles.getFont().deriveFont(buttonSize));
+    showVehicles.setFocusable(false);
 
     mainPanel.add(textPanel);
     mainPanel.add(buttonPanel);
-    mainPanel.setBackground(newbackgroundcolor);
+    mainPanel.setBackground(newBackgroundColor);
 
     frame.add(mainPanel, "Intro Screen");
   }
@@ -220,7 +247,7 @@ public class Controller {
     JButton showVehicles = new JButton("Show Vehicles");
 
     titlePanel.add(title);
-    titlePanel.setBackground(newbackgroundcolor);
+    titlePanel.setBackground(newBackgroundColor);
     title.setFont(title.getFont().deriveFont(textSize));
 
 
@@ -231,25 +258,42 @@ public class Controller {
     showVehicles.addActionListener(e -> {
       ((CardLayout)frame.getContentPane().getLayout()).show(frame.getContentPane(), "Rental List Screen");
     });
+    showVehicles.addMouseListener(new MouseAdapter() {
+      public void mouseEntered(MouseEvent e) {
+        ((JButton)e.getSource()).setBackground(vehicleHoverColor);
+      }
+
+      public void mouseExited(MouseEvent e) {
+        ((JButton)e.getSource()).setBackground(vehicleButtonColor);
+      }
+    });
     showVehicles.setForeground(textColor);
-    showVehicles.setBackground(vehiclebuttonColor);
+    showVehicles.setBackground(vehicleButtonColor);
     showVehicles.setBorderPainted(false);
     showVehicles.setOpaque(true);
     showVehicles.setFont(showVehicles.getFont().deriveFont(buttonSize));
+    showVehicles.setFocusable(false);
 
+    showJobs.addMouseListener(new MouseAdapter() {
+      public void mouseEntered(MouseEvent e) {
+        ((JButton)e.getSource()).setBackground(jobsHoverColor);
+      }
+
+      public void mouseExited(MouseEvent e) {
+        ((JButton)e.getSource()).setBackground(jobsButtonColor);
+      }
+    });
     showJobs.setForeground(textColor);
-    showJobs.setBackground(jobsbuttonColor);
+    showJobs.setBackground(jobsButtonColor);
     showJobs.setBorderPainted(false);
     showJobs.setOpaque(true);
     showJobs.setFont(showJobs.getFont().deriveFont(buttonSize));
     showJobs.setBounds(0, 40, APP_WIDTH, APP_HEIGHT);
-
-
-
+    showJobs.setFocusable(false);
 
     buttonPanel.add(showJobs);
     buttonPanel.add(showVehicles);
-    buttonPanel.setBackground(newbackgroundcolor);
+    buttonPanel.setBackground(newBackgroundColor);
 
     mainPanel.add(titlePanel, BorderLayout.NORTH);
     mainPanel.add(jobContainer, BorderLayout.CENTER);
@@ -280,29 +324,49 @@ public class Controller {
     rentalContainer.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
     showVehicles.setForeground(textColor);
-    showVehicles.setBackground(vehiclebuttonColor);
+    showVehicles.setBackground(vehicleButtonColor);
     showVehicles.setBorderPainted(false);
     showVehicles.setOpaque(true);
     showVehicles.setFont(showVehicles.getFont().deriveFont(buttonSize));
+    showVehicles.setFocusable(false);
+    showVehicles.addMouseListener(new MouseAdapter() {
+      public void mouseEntered(MouseEvent e) {
+        ((JButton)e.getSource()).setBackground(vehicleHoverColor);
+      }
+
+      public void mouseExited(MouseEvent e) {
+        ((JButton)e.getSource()).setBackground(vehicleButtonColor);
+      }
+    });
 
 
     showJobs.addActionListener(e -> {
       ((CardLayout)frame.getContentPane().getLayout()).show(frame.getContentPane(), "Job List Screen");
     });
+    showJobs.addMouseListener(new MouseAdapter() {
+      public void mouseEntered(MouseEvent e) {
+        ((JButton)e.getSource()).setBackground(jobsHoverColor);
+      }
+
+      public void mouseExited(MouseEvent e) {
+        ((JButton)e.getSource()).setBackground(jobsButtonColor);
+      }
+    });
     showJobs.setForeground(textColor);
-    showJobs.setBackground(jobsbuttonColor);
+    showJobs.setBackground(jobsButtonColor);
     showJobs.setBorderPainted(false);
     showJobs.setOpaque(true);
     showJobs.setFont(showJobs.getFont().deriveFont(buttonSize));
+    showJobs.setFocusable(false);
 
     buttonPanel.add(showJobs);
     buttonPanel.add(showVehicles);
-    buttonPanel.setBackground(newbackgroundcolor);
+    buttonPanel.setBackground(newBackgroundColor);
 
     mainPanel.add(titlePanel, BorderLayout.NORTH);
     mainPanel.add(rentalContainer, BorderLayout.CENTER);
     mainPanel.add(buttonPanel, BorderLayout.SOUTH);
-    mainPanel.setBackground(newbackgroundcolor);
+    mainPanel.setBackground(newBackgroundColor);
     frame.add(mainPanel, "Rental List Screen");
   }
 
@@ -357,7 +421,10 @@ public class Controller {
     JLabel row3 = new JLabel("             Job Description: " + j.getDescription());
     JLabel row4 = new JLabel("             Job Duration Time: " + j.getDurationTime() + " minutes");
     JPanel row5 = new JPanel(new FlowLayout(FlowLayout.CENTER));
-
+    final Color acceptbuttonColor;
+    final Color rejectbuttonColor;
+    acceptbuttonColor = new Color(160,247,139);//accept color 
+    rejectbuttonColor  = new Color(250,55,58);//reject color
     JButton accept = new JButton("Accept");
     JButton reject = new JButton("Reject");
 
@@ -370,6 +437,9 @@ public class Controller {
       acceptChosen = false;
       messageBox.dispose();
     });
+
+    accept.setBackground(acceptbuttonColor);
+    reject.setBackground(rejectbuttonColor);
 
     row5.add(accept);
     row5.add(reject);
@@ -463,7 +533,6 @@ public class Controller {
   public void removeVehicle(Vehicle v) {
     vehicles.remove(v);
   }
-
 
   public int calculateJobCompletionTime(Job j){
     return minutesFromStart + j.getDurationTime();
